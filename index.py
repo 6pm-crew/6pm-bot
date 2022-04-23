@@ -10,39 +10,23 @@ from config import DiscordBotToken
 import os as os
 
 import module.commands._commandHeader as CommandHeader
+import module.events._eventHeader as EventHeader
 # from module.commands.commandHeader import run 
 
-# game = discord.Game("Primary Bot")
 # bot = commands.Bot(command_prefix='/',status = discord.Status.online, activity = game)
 
 # declare discordBot
-client = commands.Bot(command_prefix="!")
+game = discord.Game("Primary Bot")
+client = commands.Bot(command_prefix="!",status = discord.Status.online, activity = game)
 
-# path = './module/commands/'
-# file_list= [x[0] for x in os.walk(path)]
-# print(file_list)
-# globals()['commandHeader'] = __import__("module.commands.commandHeader")
-# testing = __import__("module.commands.commandHeader",fromlist='commandHeader')
-# testing.run(client)
+#클라이언트에서 필요한 모든 데이터를 사용할 수 있다.
+data = {
+    "guildIds" : list(s.id for s in client.guilds)
+}
+#이벤트 및 명령어 헨들러를 실행한다.
+CommandHeader.run(client,data)
+EventHeader.run(client,data)
 
-CommandHeader.run(client)
-
-
-@client.event
-async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
-
-@client.event
-async def on_message(message):
-    None
-    # if message.author == client.user:
-    #     return
-
-    # if message.content.startswith('$hello'):
-    #     await message.channel.send('Hello!')
-
-# run(client)
-# my_module.run(client)
 
 print("running")
 client.run(DiscordBotToken)
