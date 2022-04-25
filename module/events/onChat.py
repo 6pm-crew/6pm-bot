@@ -1,8 +1,9 @@
+import interactions
 
-def run(client,data):
-    @client.event
+def run(bot:interactions.Client):
+    @bot.event
     async def on_message(message):
-        if message.author == client.user:
+        if message.author == bot.user:
             return
 
         if message.content.startswith('$hello'):

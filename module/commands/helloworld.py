@@ -1,16 +1,11 @@
-import discord
-from discord import activity
-from discord.enums import Status
-from discord.ext import commands
-from discord_slash import SlashCommand, SlashContext
+#backlist room add 
+import interactions
 
-def run(client,data):
-
-    slash = SlashCommand(client, sync_commands=True)
-    @slash.slash(
-        name="hello",
-        description="Just sends a message",
+def run(bot):
+    @bot.command(
+        name="my_first_command",
+        description="This is the first command I made!",
+        scope=895925360049418240,
     )
-    async def _hello(ctx:SlashCommand):
-        print(data)
-        await ctx.send("world!")
+    async def my_first_command(ctx: interactions.CommandContext):
+        await ctx.send("Hi there!")
