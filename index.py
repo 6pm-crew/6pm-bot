@@ -1,4 +1,5 @@
 # from discord import Intents
+import asyncio
 import discord
 from discord.commands import Option
 import module.commands._commandHeader as CommandHeader
@@ -12,6 +13,8 @@ from config import DISCORDBOTTOKEN, SCOPE
 # 더 자세한 내용을 참고하고 싶다면
 # https://support-dev.discord.com/hc/en-us/articles/4404772028055-Message-Content-Privileged-Intent-FAQ를 확인해주세요
 #
+
+
 
 intents = discord.Intents.default()
 intents.message_content = True
