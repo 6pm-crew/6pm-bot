@@ -1,81 +1,26 @@
-from msilib.schema import Component
-from random import choices
-from secrets import choice
-import interactions
+from random import choice, choices
+import discord
+from discord.commands import Option
+from config import SCOPE
 
+def run(bot:discord.Bot):
+    blackList = bot.create_group("blacklist", "blaklist word or channel for chat")
+    @blackList.command(guild_ids=[SCOPE])
+    async def room(
+        ctx: discord.ApplicationContext,
+        activeoptions : Option(str, "Enter command", choices=["add","remove"]),
+        channel: Option(discord.TextChannel, "Select a channel")
+    ):
+        #데이터베이스에 단어 추가
+        await ctx.respond(f"room {activeoptions} {channel}")
 
-def run(bot):
-    @bot.command(
-        name="blacklist",
-        description="This description isn't seen in UI (yet?)",
-        #scope는 사용하고 잇는 서버의 id입니다. 
-        #테스트시 수정해서 사용해야 합니다.
-        scope=895925360049418240,
-        options=[
-            interactions.Option(
-                name="room",
-                description="A descriptive description",
-                type=interactions.OptionType.SUB_COMMAND,
-                options=[
-                    interactions.Option(
-                        name="activity",
-                        description="A descriptive description",
-                        type=interactions.OptionType.STRING,
-                        required=True,
-                        choices=[
-                        {
-                                "name":"add",
-                                "value":"add"
-                            },
-                            {
-                                "name":"remove",
-                                "value":"remove"
-                            },
-                        ]
-                    ),
-                    interactions.Option(
-                        name="channel",
-                        description="A descriptive description",
-                        type=interactions.OptionType.CHANNEL,
-                        required=False,
-                    ),
-                ],
-            ),
-            interactions.Option(
-                name="word",
-                description="A descriptive description",
-                type=interactions.OptionType.SUB_COMMAND,
-                options=[
-                    interactions.Option(
-                        name="activity",
-                        description="A descriptive description",
-                        type=interactions.OptionType.STRING,
-                        required=True,
-                        choices=[
-                            {
-                                "name":"add",
-                                "value":"add"
-                            },
-                            {
-                                "name":"remove",
-                                "value":"remove"
-                            },
-                        ]
-                    ),
-                    interactions.Option(
-                        name="word",
-                        description="A descriptive description",
-                        type=interactions.OptionType.STRING,
-                        required=False,
-                    ),
-                ],
-            ),
-        ],
-    )
-    async def cmd(ctx: interactions.CommandContext, sub_command: str,channel: interactions.ChannelMention = None,activity:str="",word:str=""):
-        if sub_command == "room":
-            #이 부분은 채널의 저장하는 행동이 들어가야합니다.
-            await ctx.send(f"channel id= {channel.id}")
-        elif sub_command == "word":
-            #이 부분은 데이터를 저장해서 이름을 계속 비교해야한다.
-            await ctx.send(f"word = {word}")
+    @blackList.command(guild_ids=[SCOPE])
+    async def word(
+        ctx: discord.ApplicationContext,
+        activeoptions : Option(str, "Enter command", choices=["add","remove"]),
+        words: Option(str, "Select a word(divide word use ,)")
+    ):
+        #데이터베이스에 단어 추가
+        await ctx.respond(f"world {activeoptions} {words}")
+
+    
