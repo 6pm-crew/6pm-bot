@@ -1,4 +1,3 @@
-import interactions
 import discord
 
 def run(bot:discord.Client):

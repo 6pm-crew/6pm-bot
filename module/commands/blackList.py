@@ -1,4 +1,3 @@
-from random import choice, choices
 import discord
 from discord.commands import Option
 from config import SCOPE
@@ -9,10 +8,11 @@ def run(bot:discord.Bot):
     async def room(
         ctx: discord.ApplicationContext,
         activeoptions : Option(str, "Enter command", choices=["add","remove"]),
-        channel: Option(discord.TextChannel, "Select a channel")
+        channel : Option(discord.channel.TextChannel , "description here")
     ):
         #데이터베이스에 단어 추가
-        await ctx.respond(f"room {activeoptions} {channel}")
+        # print(channel)
+        await ctx.respond(f"room {activeoptions} {channel.mention}")
 
     @blackList.command(guild_ids=[SCOPE])
     async def word(
@@ -22,5 +22,9 @@ def run(bot:discord.Bot):
     ):
         #데이터베이스에 단어 추가
         await ctx.respond(f"world {activeoptions} {words}")
+
+
+
+
 
     

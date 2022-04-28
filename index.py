@@ -1,5 +1,4 @@
 # from discord import Intents
-import asyncio
 import discord
 from discord.commands import Option
 import module.commands._commandHeader as CommandHeader
@@ -28,6 +27,7 @@ async def on_ready():
 # 이벤트 및 명령어 헨들러를 실행한다.
 CommandHeader.run(bot)
 EventHeader.run(bot)
+
 
 # 데이터 베이스 기본 세팅및 없을 경우 제작한다.
 conn = DataBase.load('./Data/setting.db')
