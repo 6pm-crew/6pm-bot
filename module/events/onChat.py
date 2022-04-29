@@ -1,6 +1,7 @@
 import discord
 
-def run(bot:discord.Client):
+
+def run(bot:discord.Client,serverData):
     @bot.event
     async def on_message(message):
         if message.author == bot.user:

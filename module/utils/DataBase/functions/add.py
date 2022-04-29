@@ -2,17 +2,23 @@ import asyncio
 from pickle import NONE
 import sqlite3
 from tokenize import Number
+import ctypes
 import os
+
+    
+def loadDBArr(data:sqlite3.Connection):
+    result = runCmd(data,f"SELECT id,channels FROM server")
+    print(result)
+
 
 # 
 # runCmd -> 데이터베이스에서 sql 명령어를 실행합니다.
 #   data: 데이터베이스 연결(connect)
 #   cmd: 명령어
-def runCmd(data:sqlite3.Connection,cmd: str):
-    conn = data.cursor()
-    result = conn.execute(cmd)
+def runCmd(data:sqlite3.Connection,cmd:str):
+    cur = data.cursor()
+    result = cur.execute(cmd)
     return result
-
 # 
 # runCmd -> 데이터 베이스 추가시 베이터베이스에 테이블이 이미 존재하는지 확인하는 명령어입니다.
 #   data : 데이터베이스 연결(connect)
@@ -20,7 +26,8 @@ def runCmd(data:sqlite3.Connection,cmd: str):
 def checkDB(data:sqlite3.Connection,tableName:str):
     result = None
     result = runCmd(data,f"SELECT name FROM sqlite_master WHERE type='table' AND name='{tableName}';")
-    if(result == None):
+    result = result.fetchall()
+    if(len(result) <= 0):
         return False
     return True
 
@@ -30,7 +37,7 @@ def checkDB(data:sqlite3.Connection,tableName:str):
 #   name : 테이블 이름
 def MakeDB(data:sqlite3.Connection,name:str):
     if(not checkDB(data,name)):
-        data.execute("CREATE TABLE server(id INTEGER,words TEXT,channels TEXT)")
+        data.execute("CREATE TABLE server(id INTEGER PRIMARY KEY,words TEXT default '',channels TEXT default '')")
     
 
 #
