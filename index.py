@@ -1,4 +1,6 @@
 # from discord import Intents
+import json
+from xmlrpc.client import Server
 import discord
 from discord.commands import Option
 from discord.ext import commands
@@ -31,13 +33,15 @@ async def on_ready():
 
 # 데이터 베이스 기본 세팅및 없을 경우 제작한다.
 conn = DataBase.load('./Data/setting.db')
-DataBase.MakeDB(conn,'server')
+writeCursor = conn.cursor()
+DataBase.MakeDB(writeCursor,'server')
 result = DataBase.loadDBArr(conn)
 
 ServerData = Data(conn)
 if(result != None):
-    ServerData.add(Data.DATABASEARR,ServerData)
-
+    for (index,serverID) in enumerate(result['id']):
+        ServerData.add(Data.WORDDATABASEARR,type = Data.INSERT ,serverID = serverID,val = result['words'][index])
+        ServerData.add(Data.CHANNELDATABASEARR,type = Data.INSERT ,serverID = serverID,val = result['channels'][index])
 
 
 # 이벤트 및 명령어 헨들러를 실행한다.

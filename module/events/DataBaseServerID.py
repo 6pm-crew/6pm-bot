@@ -1,3 +1,5 @@
+from http import server
+import sqlite3
 from typing import Tuple
 import discord
 
@@ -9,11 +11,17 @@ def run(bot:discord.Client,serverData:Data):
     async def on_ready():
         guilds = []
         for guild in bot.guilds:
-            guilds.append(guild.id)
+            guilds.append((guild.id,"{}","{}"))
         print(guilds)
         serverCursor = serverData.connction.cursor()
-        if(len(guilds) == 1):
-            print('execute')
-            serverCursor.execute("insert into server(id) values(?)",)
-        else:
-            serverCursor.executemany("insert into server(id) values(?)",guilds)
+        try:
+            if(len(guilds) == 1):
+                print('execute')
+                serverCursor.execute("insert into server(id,channels,words) values (?,?,?)",guilds[0])
+                serverData.connction.commit()
+                
+            else:
+                serverCursor.executemany("insert into server(id,channels,word) values(?)",guilds)
+                serverData.connction.commit()
+        except sqlite3.IntegrityError as e:
+            pass
