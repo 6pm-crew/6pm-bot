@@ -11,7 +11,6 @@ import os
 def loadDBArr(data:sqlite3.Connection) -> dict:
     # result = runCmd(data,f"SELECT * FROM server")
     result = pd.read_sql_query("SELECT * FROM server",data)
-    # print('===========================================')
     temp = dict(result)
     print(temp['id'][0])
     return temp

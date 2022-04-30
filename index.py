@@ -1,5 +1,6 @@
 # from discord import Intents
 import json
+from typing import Set
 from xmlrpc.client import Server
 import discord
 from discord.commands import Option
@@ -42,6 +43,11 @@ if(result != None):
     for (index,serverID) in enumerate(result['id']):
         ServerData.add(Data.WORDDATABASEARR,type = Data.INSERT ,serverID = serverID,val = result['words'][index])
         ServerData.add(Data.CHANNELDATABASEARR,type = Data.INSERT ,serverID = serverID,val = result['channels'][index])
+
+# print(ServerData.wordDataBaseArr[895925360049418240])
+# testing:set = set(ServerData.wordDataBaseArr[895925360049418240])
+# testing.add("test")
+# print(testing)
 
 
 # 이벤트 및 명령어 헨들러를 실행한다.

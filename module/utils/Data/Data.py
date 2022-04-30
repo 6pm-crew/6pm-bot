@@ -29,7 +29,7 @@ class Data:
         serverID = kwargs.get('serverID')
         val = kwargs.get('val')
         if(typeVal == 0):
-            exec("{}[{}].update({})".format("self."+functionName,serverID,val))
+            exec("{}[{}].add({})".format("self."+functionName,serverID,val))
         elif(typeVal == 1):
             exec("{}[{}] = {}".format("self."+functionName,serverID,val))
         else:
