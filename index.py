@@ -2,13 +2,14 @@
 import json
 from typing import Set
 from xmlrpc.client import Server
+import atexit
 import discord
 from discord.commands import Option
 from discord.ext import commands
 import module.commands._commandHeader as CommandHeader
 import module.events._eventHeader as EventHeader
 from module.utils.Data.Data import Data
-import module.utils.DataBase.DB as DataBase
+from module.utils.DataBase.DB import *
 
 
 # import sqlite3
@@ -33,25 +34,15 @@ async def on_ready():
 
 
 # 데이터 베이스 기본 세팅및 없을 경우 제작한다.
-conn = DataBase.load('./Data/setting.db')
+conn = load('./Data/setting.db')
 writeCursor = conn.cursor()
-DataBase.MakeDB(writeCursor,'server')
-result = DataBase.loadDBArr(conn)
-
+MakeDB(writeCursor,'server')
 ServerData = Data(conn)
-if(result != None):
-    for (index,serverID) in enumerate(result['id']):
-        ServerData.add(Data.WORDDATABASEARR,type = Data.INSERT ,serverID = serverID,val = result['words'][index])
-        ServerData.add(Data.CHANNELDATABASEARR,type = Data.INSERT ,serverID = serverID,val = result['channels'][index])
-
-# print(ServerData.wordDataBaseArr[895925360049418240])
-# testing:set = set(ServerData.wordDataBaseArr[895925360049418240])
-# testing.add("test")
-# print(testing)
-
 
 # 이벤트 및 명령어 헨들러를 실행한다.
 CommandHeader.run(bot,ServerData)
 EventHeader.run(bot,ServerData)
-
+def exit_handler():
+    storeDBArr(ServerData)
+atexit.register(exit_handler)
 bot.run(DISCORDBOTTOKEN)

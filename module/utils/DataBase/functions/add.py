@@ -1,19 +1,34 @@
 import asyncio
+from http import server
 from pickle import NONE
 import sqlite3
 from tokenize import Number
 import pandas as pd
 import os
 
+from module.utils.Data.Data import Data
+
 # 
 # loadDBArr -> 데이터베이스에서 데이터를 불러와 arr로 저장한다.
 #   data: 데이터베이스 연결(connect)
 def loadDBArr(data:sqlite3.Connection) -> dict:
     # result = runCmd(data,f"SELECT * FROM server")
-    result = pd.read_sql_query("SELECT * FROM server",data)
+    try:
+        result = pd.read_sql_query("SELECT * FROM server",data)
+    except IndexError as e:
+        return None
     temp = dict(result)
-    print(temp['id'][0])
     return temp
+
+def storeDBArr(serverData:Data):
+    cursor = serverData.connction.cursor()
+    for (index,serverID) in enumerate(serverData.wordDataBaseArr):
+        print(index)
+        print(serverData.wordDataBaseArr[serverID])
+        setArr = str(serverData.wordDataBaseArr[serverID]).replace("'","\"")
+        runCmd(cursor,"UPDATE server SET words = '{}' WHERE id = {}".format(setArr,serverID))
+        serverData.connction.commit()
+
 
 
 # 

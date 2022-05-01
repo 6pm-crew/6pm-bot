@@ -2,6 +2,7 @@ from http import server
 import sqlite3
 from typing import Tuple
 import discord
+import module.utils.DataBase.DB as DataBase
 
 from module.utils.Data.Data import Data
 
@@ -9,6 +10,7 @@ from module.utils.Data.Data import Data
 def run(bot:discord.Client,serverData:Data):
     @bot.event
     async def on_ready():
+
         guilds = []
         for guild in bot.guilds:
             guilds.append((guild.id,"{}","{}"))
@@ -25,3 +27,11 @@ def run(bot:discord.Client,serverData:Data):
                 serverData.connction.commit()
         except sqlite3.IntegrityError as e:
             pass
+
+    
+        result = DataBase.loadDBArr(serverData.connction)
+        print(result)
+        if(result != None):
+            for (index,serverID) in enumerate(result['id']):
+                serverData.add(Data.WORDDATABASEARR,type = Data.INSERT ,serverID = serverID,val = result['words'][index])
+                serverData.add(Data.CHANNELDATABASEARR,type = Data.INSERT ,serverID = serverID,val = result['channels'][index])

@@ -3,6 +3,7 @@ import discord
 from discord.commands import Option
 from config import SCOPE
 from module.utils.Data.Data import Data
+import module.utils.DataBase.DB as DataBase
 
 #0 : channel
 #1 : word
@@ -15,10 +16,10 @@ def run(bot:discord.Bot,serverData:Data):
         activeoptions : Option(str, "Enter command", choices=["add","remove"]),
         channel : Option(discord.channel.TextChannel , "description here")
     ):
-        r"""
+        '''
         serverData.DataBaseArr[ctx.guild_id],
         데이터베이스에 단어 추가,
-        """
+        '''
         # print(channel),
         # database.runCmd(f"INSERT INTO server(id,words,channels) VALUES({},{channel.mention},{})"),
         # serverData.getData(ctx.guild_id)
@@ -30,11 +31,17 @@ def run(bot:discord.Bot,serverData:Data):
         activeoptions : Option(str, "Enter command", choices=["add","remove"]),
         words: Option(str, "Select a word(divide word use ,)")
     ):
-        print("testing")
-        # #데이터베이스에 단어 추가
-        # tempArr = serverData.wordDataBaseArr[ctx.guild_id]
-        # #서버데이터에서 가져옴
-        # serverData.add(Data.WORDDATABASEARR,type = Data.UPDATE,serverID = ctx.guild_id,val = words)
+        # print("testing")
+        #데이터베이스에 단어 추가
+        
+        #서버데이터에서 가져옴
+        if activeoptions == 'remove':
+            DataBase.storeDBArr(serverData)
+        else:
+                
+            serverData.add(Data.WORDDATABASEARR,type = Data.UPDATE,serverID = ctx.guild_id,val = words)
+            tempArr = serverData.wordDataBaseArr[ctx.guild_id]
+            print(tempArr)
         await ctx.respond(f"world {activeoptions} {words}")
 
 
