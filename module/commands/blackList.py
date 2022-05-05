@@ -1,14 +1,12 @@
-from http import server
 import discord
 from discord.commands import Option
 from config import SCOPE
-from module.utils.Data.Data import Data
-import module.utils.DataBase.DB as DataBase
+from module.utils.DatabaseServer.DataBase import *
 
 #0 : channel
 #1 : word
 #2 : default(global )
-def run(bot:discord.Bot,serverData:Data):
+def run(bot:discord.Bot,serverData:DBData):
     blackList = bot.create_group("blacklist", "blaklist word or channel for chat")
     @blackList.command(guild_ids=[SCOPE])
     async def room(
@@ -16,13 +14,14 @@ def run(bot:discord.Bot,serverData:Data):
         activeoptions : Option(str, "Enter command", choices=["add","remove"]),
         channel : Option(discord.channel.TextChannel , "description here")
     ):
-        '''
-        serverData.DataBaseArr[ctx.guild_id],
-        데이터베이스에 단어 추가,
-        '''
-        # print(channel),
-        # database.runCmd(f"INSERT INTO server(id,words,channels) VALUES({},{channel.mention},{})"),
-        # serverData.getData(ctx.guild_id)
+        if activeoptions == 'remove':
+            serverData.removeData(DBData.CHANNEL,ctx.guild_id,channel.id)
+            # DataBase.storeDBArr(serverData)
+        elif activeoptions == 'add':
+            serverData.addData(DBData.CHANNEL,ctx.guild_id,channel.id)
+        elif activeoptions == 'list':
+            pass
+
         await ctx.respond(f"{ctx.guild_id} room {activeoptions} {channel.mention} {channel.id}")
 
     @blackList.command(guild_ids=[SCOPE])
@@ -31,18 +30,17 @@ def run(bot:discord.Bot,serverData:Data):
         activeoptions : Option(str, "Enter command", choices=["add","remove"]),
         words: Option(str, "Select a word(divide word use ,)")
     ):
-        # print("testing")
-        #데이터베이스에 단어 추가
-        
         #서버데이터에서 가져옴
         if activeoptions == 'remove':
-            DataBase.storeDBArr(serverData)
-        else:
-                
-            serverData.add(Data.WORDDATABASEARR,type = Data.UPDATE,serverID = ctx.guild_id,val = words)
-            tempArr = serverData.wordDataBaseArr[ctx.guild_id]
-            print(tempArr)
-        await ctx.respond(f"world {activeoptions} {words}")
+            serverData.removeData(DBData.WORD,ctx.guild_id,words)
+            # DataBase.storeDBArr(serverData)
+        elif activeoptions == 'add':
+            serverData.addData(DBData.WORD,ctx.guild_id,words)
+        elif activeoptions == 'list':
+            pass
+
+        print(serverData.serverWordDict[(str)(ctx.guild_id)])
+        await ctx.respond(f"word {activeoptions} {words}")
 
 
 
