@@ -14,6 +14,7 @@ def run(bot:discord.Bot,serverData:DBData):
         activeoptions : Option(str, "Enter command", choices=["add","remove"]),
         channel : Option(discord.channel.TextChannel , "description here")
     ):
+        print(serverData.serverChannelDict)
         if activeoptions == 'remove':
             serverData.removeData(DBData.CHANNEL,ctx.guild_id,channel.id)
             # DataBase.storeDBArr(serverData)
@@ -21,7 +22,7 @@ def run(bot:discord.Bot,serverData:DBData):
             serverData.addData(DBData.CHANNEL,ctx.guild_id,channel.id)
         elif activeoptions == 'list':
             pass
-
+        print(serverData.serverChannelDict[(str)(ctx.guild_id)])
         await ctx.respond(f"{ctx.guild_id} room {activeoptions} {channel.mention} {channel.id}")
 
     @blackList.command(guild_ids=[SCOPE])

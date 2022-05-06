@@ -21,9 +21,12 @@ db = pymysql.Connect(host=DATABASE['host'],user=DATABASE['user'],passwd=DATABASE
 serverData = DataBase.DBData(db)
 result = DataBase.getServerIDs(serverData)
 for guildId in result:
-    banWordList = DataBase.getDataArr(serverData,guildId)
+    banWordList = DataBase.getDataArr(serverData,guildId,type='word')
+    banChannelList = DataBase.getDataArr(serverData,guildId,type='channel')
     serverData.serverWordDict[(str)(guildId)] = banWordList
+    serverData.serverChannelDict[(str)(guildId)] = banChannelList
 print(serverData.serverWordDict)
+print(serverData.serverChannelDict)
 
 # discord 정책 변경으로 intents 설정없이 서버 데이터 접근이 불가능해졌습니다.
 # 더 자세한 내용을 참고하고 싶다면
@@ -34,18 +37,13 @@ intents.message_content = True
 
 bot = commands.Bot(intents = intents)
 
-@bot.event
-async def on_ready():
-    print(f'We have logged in as {bot.user}')
-
 # 이벤트 및 명령어 헨들러를 실행한다.
 CommandHeader.run(bot,serverData)
 EventHeader.run(bot,serverData)
 
 def exit_handler():
     for data in enumerate(serverData.serverWordDict):
-        print(data)
         DataBase.addWord(serverData,data)
-        # print(data)
+        DataBase.addChannel(serverData,data)
 atexit.register(exit_handler)
 bot.run(DISCORDBOTTOKEN)

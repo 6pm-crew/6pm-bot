@@ -6,23 +6,24 @@ import module.utils.DatabaseServer.DataBase as DataBase
 
 db = pymysql.Connect(host=DATABASE['host'],user=DATABASE['user'],passwd=DATABASE['passwd'],db=DATABASE['db'],charset=DATABASE['charset'],port=DATABASE['port'])
 
-val = [('895925360049418240')]
+# val = [('895925360049418240')]
+val =[(895925360049418240, 895925419981819964), (895925360049418240, 895928895021400094)]
 test = DataBase.DBData(db)
-# result = DataBase.runQuery(
-#         test,
-#         "SELECT w.value \
-#         FROM serverlist s \
-#         INNER JOIN filterword fw \
-#         ON fw.serverlist_index = s.index \
-#         INNER JOIN words w \
-#         ON w.word_id = fw.word_id \
-#         WHERE serverid = %s \
-#         ",
-#         895925360049418240
-# )
+result = DataBase.runQuerys(
+        test,
+        "insert ignore into filterchannel(serverlist_index,channel_id) \
+        Values(( \
+        SELECT `index` \
+        FROM serverlist \
+        WHERE serverid = %s\
+        ),%s)\
+        ",
+        val
+    )
+print(result)
 # print([list(x) for x in result])
-result = DataBase.runQuerys(test,"select serverid from serverlist where serverid = (%s)",val)
-print([list(x) for x in result])
+# result = DataBase.runQuerys(test,"select serverid from serverlist where serverid = (%s)",val)
+# print([list(x) for x in result])
 
 
 # def print_format_table():
