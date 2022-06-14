@@ -1,0 +1,10 @@
+# development folders
+node_modules
+.vscode
+
+# tsc build files
+src/js/*
+
+
+#config files
+.env
