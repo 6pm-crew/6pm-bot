@@ -7,6 +7,16 @@ from discord import ApplicationCommandInvokeError
 
 
 class Data:
+    """
+    서버의 데이터 베이스의 정보를 저장하고 있는 클래스입니다.
+
+    Custom Logo
+    
+    Constants:
+        WORDDATABASEARR: `wordDataBaseArr`
+        ==================================
+    """
+
     WORDDATABASEARR = "wordDataBaseArr"
     CHANNELDATABASEARR = "channelDataBaseArr"
 
@@ -21,7 +31,7 @@ class Data:
     UPDATE = 0
     INSERT = 1
     def add(self,functionName:str,**kwargs):
-        r"""
+        """
         type : UPDATE, INSERT
         functionName: fieldValue,
         serverID : discordID(numbers),

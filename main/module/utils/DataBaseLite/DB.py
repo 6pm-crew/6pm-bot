@@ -22,9 +22,11 @@
 
 
 
-from .functions.io import *
-from .functions.Data import *
-from .functions.discordSQL import *
+from .functions.add import *
+from .functions.load import *
 
-# from .functions.load import *
-
+def __init__():
+    """ 클래스 생성자
+    :param a: 생성자 파라미터
+    >>> a = A(10)
+    """

@@ -6,6 +6,14 @@ import pymysql
 from config import *
 
 def runQuery(data:DBData,cmd:str,value:any = None):
+    """
+    :param data: 데이터베이스 정보 저장 변수
+    :type data: DBData
+    :param cmd: 실행할 명령어
+    :typd data: str
+    :param value: 실행할 명령어에 들어갈 데이터값
+    :type value: any
+    """
     findWord = ["select","show"]
     foundBool = True
     result = None
@@ -19,7 +27,7 @@ def runQuery(data:DBData,cmd:str,value:any = None):
 
 
     if(foundBool):
-        colorPrint(COLORBACK.LIGHTRED_EX,"commiting...")
+        colorPrint(COLORBACK.LIGHTRED_EX,"commiting...query")
         data.database.commit()
     result = data.cursor.fetchall()
 
@@ -37,7 +45,7 @@ def runQuerys(data:DBData,cmd:str,val):
     
     data.cursor.executemany(cmd,val)
     if(foundBool):
-        colorPrint(COLORBACK.LIGHTRED_EX,"commiting...")
+        colorPrint(COLORBACK.LIGHTRED_EX,"commiting...querys")
         data.database.commit()
     result = data.cursor.fetchall()
 

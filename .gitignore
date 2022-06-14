@@ -1,6 +1,15 @@
+# 개발용 구간
 index_dev.py
 config.py
 
+# 디버그 데이터
 __pycache__/
+
+
+# sqlite 데이터
 setting.db
 setting.db-journal
+
+
+# 문서화 데이터
+docs
