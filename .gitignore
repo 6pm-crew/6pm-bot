@@ -3,3 +3,5 @@ config.py
 
 __pycache__/
 setting.db
+
+docs
