@@ -1,0 +1,10 @@
+{
+    "entryPoints": ["./src"],
+    "out": "docs",
+    "sort": ["source-order"],
+    "name": "6pmbot",
+    "tsconfig": "./tsconfig.json",
+    "entryPointStrategy": "expand",
+    "includes": "./src/ts/utils/"
+    
+}
