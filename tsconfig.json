@@ -8,7 +8,7 @@
       "experimentalDecorators": true, // 타입스크립트 데코레이터를 사용하기 위해 필요한 옵션
       "emitDecoratorMetadata": true,   // 위와 같음
       "rootDir": "./src/ts",
-      "outDir": "./src/js",
+      "outDir": "./build",
       "resolveJsonModule": true
     }
   }

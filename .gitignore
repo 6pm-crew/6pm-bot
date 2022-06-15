@@ -4,6 +4,7 @@ node_modules
 
 # tsc build files
 src/js/*
+build/*
 
 
 #config files

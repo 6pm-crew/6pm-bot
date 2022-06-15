@@ -10,6 +10,7 @@ client.once('ready', () => {
 	console.log('Ready!');
 });
 
+require("./utils/commandHandler")(client,true)
 
 // Login to Discord with your client's token
 client.login(DISCORD_BOT_TOKEN);
