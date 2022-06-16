@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
+import { SlashCommandBuilder,SlashCommandSubcommandsOnlyBuilder } from '@discordjs/builders';
 import { Interaction } from 'discord.js';
 /**
  * 
@@ -10,14 +10,47 @@ const data = new SlashCommandBuilder()
 		subcommand
 			.setName('word')
 			.setDescription('set filter for word')
-			.addUserOption(option => option.setName('target').setDescription('The user')))
+			.addStringOption((option) =>
+				option
+					.setName('active')
+					.setDescription('What action should be taken with the users points?')
+					.addChoices(
+						{ name: 'Add', value: 'add' },
+						{ name: 'Remove', value: 'remove' },
+					)
+					.setRequired(true),
+			)
+			.addStringOption((option) =>
+						option
+							.setName('word')
+							.setDescription('What action should be taken with the users points?')
+							.setRequired(true)
+					)
+	)
 	.addSubcommand(subcommand =>
 		subcommand
 			.setName('room')
-			.setDescription('Info about the server'));
+			.setDescription('set filter for word')
+			.addStringOption((option) =>
+				option
+					.setName('active')
+					.setDescription('What action should be taken with the users points?')
+					.addChoices(
+						{ name: 'Add', value: 'add' },
+						{ name: 'Remove', value: 'remove' },
+					)
+					.setRequired(true),
+			)
+			.addChannelOption((option) =>
+				option
+					.setName('channel')
+					.setDescription('select channel that will be filtered')
+					.setRequired(true)
+			)
+	)
 
 /**
- *
+ * 
  * 
  * @param interaction when slashcommand is triggered then slashcommand data is stored through this parameter
  * @returns `promise<void>` return promise for response for slashcommand
