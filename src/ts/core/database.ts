@@ -1,28 +1,26 @@
-import mysql from 'mysql'
+import mysql from 'mysql2/promise'
 import {DatabaseConfig} from '../config'
-import {getServers} from './functions/io'
+import {getServers,runCmd} from './functions/io'
 
 const test:Map<string,string> = new Map()
 
 /**
  * class that control database 
  */
-class Database{
+export class Database{
     // server: {필터링될 단어[]},
     private dataWords:Map<string,[]> = new Map<string,[]>()
     private dataChanels:Map<string,[]> = new Map<string,[]>()
-    private connection:mysql.Connection
+    private mysqlPool:mysql.Pool
 
     constructor() {
-        this.connection = mysql.createConnection({
+        this.mysqlPool = mysql.createPool({
             host     : DatabaseConfig.host,
             user     : DatabaseConfig.user,
             password : DatabaseConfig.passwd,
             database : DatabaseConfig.database,
             port : DatabaseConfig.port
-          });
-            
-        //   connection.connect();
+        });
     }
     /**
      * function that give you `map` that contain filtered words
@@ -38,6 +36,10 @@ class Database{
     }
 
     getServer = () => {
-        return getServers(this.connection)
+        return getServers(this.mysqlPool)
+    }
+
+    getRun = () => {
+        // return runCmd(this.mysqlPool,"testing",null)
     }
 }

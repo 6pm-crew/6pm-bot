@@ -1,6 +1,7 @@
 # development folders
 node_modules
 .vscode
+testing
 
 # tsc build files
 src/js/*

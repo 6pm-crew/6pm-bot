@@ -1,6 +1,7 @@
 // Require the necessary discord.js classes
 import {Client, Intents} from "discord.js"
 import {DISCORD_BOT_TOKEN} from "./config"
+import {Database} from "./core/database"
 
 // Create a new client instance
 const client:Client = new Client({ intents: [Intents.FLAGS.GUILDS] });
@@ -10,6 +11,8 @@ client.once('ready', () => {
 	console.log('Ready!');
 });
 
+let database:Database = new Database();
+console.log(database.getServer())
 require("./utils/commandHandler")(client,true)
 
 // Login to Discord with your client's token
