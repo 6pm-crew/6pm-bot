@@ -2,18 +2,16 @@ import mysql from 'mysql2/promise'
 import Connection from 'mysql2/typings/mysql/lib/Connection';
 /**
  * get serverlist that on databasew
- * @param connection database connection parameter
+ * @param pool database connection parameter
  */
-export const getServers = async (connection:mysql.Pool) => {
-    const result = await runCmd(connection,'select serverid from serverlist',null)
-    console.log(result);
-
+export const getServers = async (pool:mysql.Pool) => {
+    const result = await runCmd(pool,'select serverid from serverlist')
+    return result;
 }
 
-
-export const runCmd = async (pool:mysql.Pool,cmd:string,value: any) => {
+export const runCmd = async (pool:mysql.Pool,cmd:any) => {
     const connection:mysql.PoolConnection = await pool.getConnection()
-    const type:string = Object.prototype.toString.call(value).slice(8, -1)
+    const type:string = Object.prototype.toString.call(cmd).slice(8, -1)
     if(type === 'Array'){
         // connection.quer
         console.log("array");
@@ -21,21 +19,12 @@ export const runCmd = async (pool:mysql.Pool,cmd:string,value: any) => {
     else if(type === 'Null'){
 
         const [row,error] = await connection.query(cmd);
+        connection.release()
         return row
     }
     else{
-        console.log("non array")
+        const [row,error] = await connection.query(cmd);
+        connection.release()
+        return row
     }
 }
-
-// function runCmd(connection:mysql.Connection,cmd:string,value:any):void{
-
-// }
-
-
-// export const runCmd = async () => {
-
-// }
-// export const runCmd = async (connection:mysql.Connection,cmd:string,value:string[]) => {
-//     connection.connect()
-// }

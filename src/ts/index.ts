@@ -12,7 +12,6 @@ client.once('ready', () => {
 });
 
 let database:Database = new Database();
-console.log(database.getServer())
 require("./utils/commandHandler")(client,true)
 
 // Login to Discord with your client's token
