@@ -7,12 +7,13 @@ import {Database} from "./core/database"
 const client:Client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 
 // When the client is ready, run this code (only once)
-client.once('ready', () => {
+client.once('ready', async() => {
 	console.log('Ready!');
 });
 
 let database:Database = new Database();
-require("./utils/commandHandler")(client,true)
+
+require("./utils/commandHandler")(client,database,true)
 
 // Login to Discord with your client's token
 client.login(DISCORD_BOT_TOKEN);

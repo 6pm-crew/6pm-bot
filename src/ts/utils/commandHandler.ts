@@ -7,6 +7,7 @@ import * as fs from 'fs'
 import {Client, Intents} from "discord.js"
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { REST } from '@discordjs/rest';
+import { Database } from '../core/database';
 
 // const { Client, Intents } = require('discord.js');
 import {DISCORD_BOT_TOKEN,DatabaseConfig} from "../config"
@@ -35,7 +36,7 @@ export const commands:JSON[] = [];
  * @param bot discord data that start in `index`
  * @param reload discord reload boolean
  */
-export const slashCommandHandler = (bot:Client<boolean>,reload:boolean) => {
+export const slashCommandHandler = (bot:Client<boolean>,database:Database,reload:boolean) => {
 
     let slashComamnds = getFiles("./build/commands",".js")
     // exception check for above commands line didn't read `commands` folder `commands`
@@ -46,7 +47,7 @@ export const slashCommandHandler = (bot:Client<boolean>,reload:boolean) => {
     //getting commands in `commnds` folder 
     for (const path of slashComamnds){
         const command = require(`../commands/${path}`)
-        bot.on('interactionCreate',interaction => command.response(interaction));
+        bot.on('interactionCreate',interaction => command.response(interaction,database));
         commands.push(command.data.toJSON())
     }
     // registering the slash commands 

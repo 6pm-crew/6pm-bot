@@ -28,17 +28,28 @@ export class Database{
     }
     /**
      * function that give you `map` that contain filtered words
+     * it contains guildid for string and filtered words for array
      * 
-     * @returns return data that words that filters
+     * @returns `Map<string,[]>` format of return value 
      */
     getDataWords = () => {
         return this.dataWords
     }
 
+    /**
+     * getting filtered channels list. 
+     * it contains guildid for string and filtered channels id for array
+     * 
+     * @returns `Map<string,[]>` format of return value 
+     */
     getDataChannels = () => {
         return this.dataChanels
     }
 
+    /**
+     * getting servers list
+     * @returns `Map<string,[]>` format of return value 
+     */
     getServer = () => {
         return getServers(this.mysqlPool)
     }
@@ -47,6 +58,7 @@ export class Database{
      * storing serverList in `number` array
      */
     setServerlist = async () => {
+
         let temp = await getServers(this.mysqlPool)
         this.serverlist =  Object.values(temp!).map(element => parseInt(element.serverid))
     }
@@ -59,7 +71,13 @@ export class Database{
         return this.serverlist
     }
 
+    /**
+     * adding word to database
+     * @param word words that going to add in database
+     * @returns database callback return value
+     */
     addWord = (word:string) => {
-        return addWord(this.mysqlPool,word)
+
+        return addWord(this.mysqlPool,10,word)
     }
 }

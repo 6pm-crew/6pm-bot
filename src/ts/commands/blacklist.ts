@@ -1,6 +1,7 @@
 
 import { SlashCommandBuilder,SlashCommandSubcommandsOnlyBuilder } from '@discordjs/builders';
 import { Interaction } from 'discord.js';
+import { Database } from '../core/database';
 /**
  * function of building slashcommand 
  */
@@ -58,7 +59,7 @@ const data = new SlashCommandBuilder()
  * @param interaction when slashcommand is triggered then slashcommand data is stored through this parameter
  * @returns `promise<void>` return promise for response for slashcommand
  */
-const response = async (interaction:Interaction) => {
+const response = async (interaction:Interaction,database:Database) => {
     if (!interaction.isCommand()) return;
 
     if (interaction.commandName === 'blacklist') {
