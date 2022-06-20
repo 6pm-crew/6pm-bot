@@ -3,12 +3,12 @@ import { SlashCommandBuilder,SlashCommandSubcommandsOnlyBuilder } from '@discord
 import { Interaction } from 'discord.js';
 import { Database } from '../core/database';
 /**
- * function of building slashcommand 
+ * `slashcommand`를 만들기 위한 `builder`이다.
  */
 const data = new SlashCommandBuilder()
 	.setName('blacklist')
 	.setDescription('Get info about a user or a server!')
-	//this is for subcommand `word`
+	//서버 커맨드 `word` 를 만드는 부분이다.
 	.addSubcommand(subcommand =>
 		subcommand
 			.setName('word')
@@ -30,7 +30,7 @@ const data = new SlashCommandBuilder()
 							.setRequired(true)
 					)
 	)
-	//this is for subcommand `room`
+	//서브 커맨드 `room` 를 만드는 부분이다.
 	.addSubcommand(subcommand =>
 		subcommand
 			.setName('room')
@@ -54,10 +54,11 @@ const data = new SlashCommandBuilder()
 	)
 
 /**
- * This `async` funciton is for responsing 
+ * 이 함수는 `slash command`의 사용에 반응하는 `async` 함수입니다.
  * 
- * @param interaction when slashcommand is triggered then slashcommand data is stored through this parameter
- * @returns `promise<void>` return promise for response for slashcommand
+ * @param interaction `slash command` 사용시 반응하여 `slashcommand`의 정보가 interation을 통해서 들어가게 됩니다.
+ * @param database 디스코드 봇이 사용하는 database 정보가 들어가있는 매개변수입니다.
+ * @returns `promise<void>` 형식으로 `slash command`사용 후 반환됩니다.
  */
 const response = async (interaction:Interaction,database:Database) => {
     if (!interaction.isCommand()) return;
@@ -74,8 +75,12 @@ const response = async (interaction:Interaction,database:Database) => {
 			await interaction.reply('room!');
 		}
 		else if(interaction.options.getSubcommand() === 'word'){
-			const activeArg:string = interaction.options.getString('word')!
+			const activeArg:string = interaction.options.getString('active')!
+			const word:string = interaction.options.getString('word')!
+			console.log(activeArg)
 			if(activeArg === 'add'){
+				console.log(interaction.guild?.id)
+				database.addWord(interaction.guild?.id!,word)
 				// TODO 블랙리스트 추가해야 됨
 			}
 			else if(activeArg === 'remove'){

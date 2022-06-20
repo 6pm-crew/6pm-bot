@@ -1,19 +1,19 @@
 import mysql from 'mysql2/promise'
 import {DatabaseConfig} from '../config'
-import {getServers,runCmd} from './functions/io'
-import {addWord} from './functions/controlData'
-
-const test:Map<string,string> = new Map()
+import {runCmd} from './functions/io'
+import {addWord, 
+    getGuildData,
+    getServers} from './functions/controlData'
 
 /**
- * class that control database 
+ * 디스코드 데이터를 관리하는 클라스이다.
  */
 export class Database{
     // server: {필터링될 단어[]},
-    private dataWords:Map<string,[]> = new Map<string,[]>()
-    private dataChanels:Map<string,[]> = new Map<string,[]>()
+    private dataWords:Map<string,any[]> = new Map<string,[]>()
+    private dataChanels:Map<string,any[]> = new Map<string,[]>()
     private mysqlPool:mysql.Pool
-    private serverlist:number[] = []
+    private serverlist:string[] = []
 
     constructor() {
         this.mysqlPool = mysql.createPool({
@@ -23,61 +23,89 @@ export class Database{
             database : DatabaseConfig.database,
             port : DatabaseConfig.port
         });
-        this.setServerlist()
+        this.setupDatabase()
+
 
     }
+
     /**
-     * function that give you `map` that contain filtered words
-     * it contains guildid for string and filtered words for array
+     * `Database` 클라스가 생성될 기본 설정을 해주는 함수이다.
+     */
+    private setupDatabase = async () => {
+        // 데이터베이스에서 서버 리스트를 가지고 온다.
+        await this.setServerlist()
+        // 서버 리스트를 가지고 온 상태에서 각 가지고 온 데이터를 클라스에 저장해준다.
+        await this.setDatas()
+    }
+
+    /**
+     * 각 서버에 대한 필터된 `textchannel`과 `word`를 데이터베이스에서 가져와준다.
+     */
+    private setDatas = async () => {
+        for(const guildID of this.serverlist){
+            // 데이터베이스로 부터 데이터를 가지고 옵니다.
+            const res = await getGuildData(this.mysqlPool,guildID)
+            // 결과값으로 단어랑 채널 필터링를 분리한다.
+            const word = Object.values(res.word!).map(element => element.value);
+            const channel = Object.values(res.channel!).map(element => element.channel_id)
+            
+            this.dataWords.set(guildID,word);
+        }
+    }
+
+    /**
+     * `Map<string, any[]>`형식으로, guildID와 그에 상승하는 필터된 단어 배열을 가져온다.
      * 
-     * @returns `Map<string,[]>` format of return value 
+     * @returns `Map<string,[]>` 형식의 반환한다.
      */
     getDataWords = () => {
         return this.dataWords
     }
 
     /**
-     * getting filtered channels list. 
-     * it contains guildid for string and filtered channels id for array
+     * 모든 서버에서의 필터링된 단어를 가지고 온다.
      * 
-     * @returns `Map<string,[]>` format of return value 
+     * @returns `Map<string,[]>` 형식으로 반환한다.
      */
     getDataChannels = () => {
         return this.dataChanels
     }
 
     /**
-     * getting servers list
-     * @returns `Map<string,[]>` format of return value 
+     * `guildID`를 반환해준다.
+     * @returns `Map<string,[]>` 형식으로 반환한다.
      */
     getServer = () => {
         return getServers(this.mysqlPool)
     }
 
     /**
-     * storing serverList in `number` array
+     * `guildID`를 `string[]` 형식으로 저장한다.
+     * `private` 함수이다.
      */
-    setServerlist = async () => {
+    private setServerlist = async () => {
 
         let temp = await getServers(this.mysqlPool)
-        this.serverlist =  Object.values(temp!).map(element => parseInt(element.serverid))
+        this.serverlist =  Object.values(temp!).map(element => element['CAST(serverid AS CHAR)'])
+        
     }
 
     /**
-     * return guild id
-     * @returns `number` array of guilds id
+     * `guildID`를 반환한다.
+     * @returns `string[]` 형식으로 반환한다. 
      */
     getServerlist = () => {
         return this.serverlist
     }
 
     /**
-     * adding word to database
-     * @param word words that going to add in database
-     * @returns database callback return value
+     * 데이터베이스에 단어를 추가한다.
+     * @param guildID 단어를 집어넣고자 하는 `guildID`
+     * @param word 데이터베이스에 넣고자 하는 단어이다.
+     * @returns 데이터베이스의 `query`를 실행후 반환되는 콜백이다.
      */
-    addWord = (word:string) => {
+    addWord = (guildID:string,word:string) => {
 
-        return addWord(this.mysqlPool,10,word)
+        return addWord(this.mysqlPool,guildID,word)
     }
 }
