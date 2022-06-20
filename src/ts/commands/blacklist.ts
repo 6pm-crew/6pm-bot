@@ -80,7 +80,7 @@ const response = async (interaction:Interaction,database:Database) => {
 			console.log(activeArg)
 			if(activeArg === 'add'){
 				console.log(interaction.guild?.id)
-				database.addWord(interaction.guild?.id!,word)
+				database.addWordDB(interaction.guild?.id!,word)
 				// TODO 블랙리스트 추가해야 됨
 			}
 			else if(activeArg === 'remove'){

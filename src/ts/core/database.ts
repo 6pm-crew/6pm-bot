@@ -1,9 +1,10 @@
 import mysql from 'mysql2/promise'
 import {DatabaseConfig} from '../config'
 import {runCmd} from './functions/io'
-import {addWord, 
+import {addWord,removeWord} from './functions/data'
+import {addWordDB, 
     getGuildData,
-    getServers} from './functions/controlData'
+    getServers} from './functions/server'
 
 /**
  * 디스코드 데이터를 관리하는 클라스이다.
@@ -63,6 +64,16 @@ export class Database{
     }
 
     /**
+     * 특정 `guildID`의 필터링된 단어들을 설정하는 함수입니다.
+     * 
+     * @param guildID 바꿀 서버의 `guildID`
+     * @param word 바꾸려고 하는 필터링 단어 배열
+     */
+    setDataWords = (guildID:string,word:string[]) => {
+        this.dataWords.set(guildID,word)
+    }
+
+    /**
      * 모든 서버에서의 필터링된 단어를 가지고 온다.
      * 
      * @returns `Map<string,[]>` 형식으로 반환한다.
@@ -104,8 +115,8 @@ export class Database{
      * @param word 데이터베이스에 넣고자 하는 단어이다.
      * @returns 데이터베이스의 `query`를 실행후 반환되는 콜백이다.
      */
-    addWord = (guildID:string,word:string) => {
+    addWordDB = (guildID:string,word:string) => {
 
-        return addWord(this.mysqlPool,guildID,word)
+        return addWordDB(this.mysqlPool,guildID,word)
     }
 }
