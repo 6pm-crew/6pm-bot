@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise'
-import { Database } from '../database'
+import { Database } from '../Database'
 import {runCmd} from './io'
 
 
@@ -8,7 +8,7 @@ export const removeGuild = () => {
 }
 
 export const addGuild = () => {
-    
+
 }
 
 /* 단어 관련 함수 */

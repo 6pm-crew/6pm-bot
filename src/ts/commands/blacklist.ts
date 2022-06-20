@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder,SlashCommandSubcommandsOnlyBuilder } from '@discordjs/builders';
 import { Interaction } from 'discord.js';
-import { Database } from '../core/database';
+import { Database } from '../core/Database';
 /**
  * `slashcommand`를 만들기 위한 `builder`이다.
  */

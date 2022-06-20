@@ -7,7 +7,7 @@ import * as fs from 'fs'
 import {Client, Intents} from "discord.js"
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { REST } from '@discordjs/rest';
-import { Database } from '../core/database';
+import { Database } from '../core/Database';
 
 // const { Client, Intents } = require('discord.js');
 import {DISCORD_BOT_TOKEN,DatabaseConfig} from "../config"

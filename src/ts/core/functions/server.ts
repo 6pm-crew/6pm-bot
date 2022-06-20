@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise'
-import { Database } from '../database'
+import { Database } from '../Database'
 import {runCmd} from './io'
 
 /**
@@ -48,7 +48,7 @@ export const addGuildDB = () => {
 }
 
 export const removeGuildDB = () => {
-    
+
 }
 
 
