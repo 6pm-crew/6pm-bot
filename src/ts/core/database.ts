@@ -2,9 +2,11 @@ import mysql from 'mysql2/promise'
 import {DatabaseConfig} from '../config'
 import {runCmd} from './functions/io'
 import {addWord,removeWord} from './functions/data'
-import {addWordDB, 
+import {addWordDB,
+    getWordDB, 
     getGuildData,
-    getServers} from './functions/server'
+    getServers,
+    removeWordDB} from './functions/server'
 
 /**
  * 디스코드 데이터를 관리하는 클라스이다.
@@ -14,6 +16,7 @@ export class Database{
     private dataWords:Map<string,any[]> = new Map<string,[]>()
     private dataChanels:Map<string,any[]> = new Map<string,[]>()
     private mysqlPool:mysql.Pool
+    private editedServer:Set<string> = new Set<string>()
     private serverlist:string[] = []
 
     constructor() {
@@ -33,6 +36,7 @@ export class Database{
      * `Database` 클라스가 생성될 기본 설정을 해주는 함수이다.
      */
     private setupDatabase = async () => {
+        console.log("setuping database...")
         // 데이터베이스에서 서버 리스트를 가지고 온다.
         await this.setServerlist()
         // 서버 리스트를 가지고 온 상태에서 각 가지고 온 데이터를 클라스에 저장해준다.
@@ -48,12 +52,37 @@ export class Database{
             const res = await getGuildData(this.mysqlPool,guildID)
             // 결과값으로 단어랑 채널 필터링를 분리한다.
             const word = Object.values(res.word!).map(element => element.value);
-            const channel = Object.values(res.channel!).map(element => element.channel_id)
-            
-            this.dataWords.set(guildID,word);
+            const channel = Object.values(res.channel!).map(element => element['CAST(fc.channel_id as CHAR)'])
+            this.dataWords.set(guildID,word)
+            this.dataChanels.set(guildID,channel)
+
         }
     }
 
+    /**
+     * 
+     */
+    syncronize = async () => {
+        for(const serverid of this.editedServer){
+            const original = await getWordDB(this.mysqlPool,serverid)
+            const originalValue = new Set<string>(Object.values(original!).map(x => x.value))
+            const changeValue = new Set<string>(this.dataWords.get(serverid))
+            console.log('deleting',new Set([...originalValue].filter(x => !changeValue.has(x))))
+            await addWordDB(this.mysqlPool,serverid,[...changeValue].filter(x => !originalValue.has(x)))
+            this.editedServer.delete(serverid)
+        }
+
+    }
+
+
+    /**
+     * 데이터베이스에 사용하는 `Pool`를 출력한다.
+     * 
+     * @returns `mysql.Pool` 형식으로 반환한다.
+     */
+    getMysqlPool = () => {
+        return this.mysqlPool
+    }
     /**
      * `Map<string, any[]>`형식으로, guildID와 그에 상승하는 필터된 단어 배열을 가져온다.
      * 
@@ -103,6 +132,7 @@ export class Database{
 
     /**
      * `guildID`를 반환한다.
+     * 
      * @returns `string[]` 형식으로 반환한다. 
      */
     getServerlist = () => {
@@ -110,13 +140,26 @@ export class Database{
     }
 
     /**
-     * 데이터베이스에 단어를 추가한다.
+     * `database` 클라스에 단어를 추가한다.
+     * 
      * @param guildID 단어를 집어넣고자 하는 `guildID`
-     * @param word 데이터베이스에 넣고자 하는 단어이다.
-     * @returns 데이터베이스의 `query`를 실행후 반환되는 콜백이다.
+     * @param word `database` 클라스에 넣고자 하는 단어이다.
      */
-    addWordDB = (guildID:string,word:string) => {
-
-        return addWordDB(this.mysqlPool,guildID,word)
+    addWord = (guildID:string,word:string) => {
+        this.editedServer.add(guildID);
+        return addWord(this,guildID,word)
     }
+
+    /**
+     * `database` 클라스에 단어를 삭제한다.
+     * 
+     * @param guildID 단어를 삭제하고자 하는 `guildID`
+     * @param word `database` 클라스에 삭제하고자 하는 단어이다.
+     */
+    removeWord = (guildID:string,word:string) => {
+        this.editedServer.add(guildID)
+        return removeWord(this,guildID,word)
+    } 
+
+
 }

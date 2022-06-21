@@ -12,7 +12,7 @@ import Connection from 'mysql2/typings/mysql/lib/Connection';
 export const runCmd = async (pool:mysql.Pool,cmd:any,values?:any[]) => {
     // pool으로부터 연결을 시도한다.
     const connection:mysql.PoolConnection = await pool.getConnection()
-
+    let arrayArgumentIndex:number[] = [];
     // value가 undefined 인것을 확인합니다. 즉, 실행 쿼리에 '?' 대체 문자가 없다는 의미입니다.
     if(values === undefined){
         const [row,error] = await connection.query(cmd);
@@ -20,11 +20,34 @@ export const runCmd = async (pool:mysql.Pool,cmd:any,values?:any[]) => {
         return row
     }
     // values가 [[]] 구성인지 []인지 확인해주는 부분입니다.
-    const type:string = Object.prototype.toString.call(values[0]).slice(8, -1)
-    if(type === 'Array'){
-        // connection.quer
-        
-        console.log("array");
+    for(const index in values){
+        const type:string = Object.prototype.toString.call(values[index]).slice(8, -1)
+        if(type === 'Array') arrayArgumentIndex.push(parseInt(index))
+    }
+    
+    if(arrayArgumentIndex.length !== 0){
+        let querys:string[] = []
+        let count:number = 0;
+        const template:string =cmd;
+        arrayArgumentIndex.forEach(element => {
+            if(values[element].length > count)
+                count = values[element].length
+        })
+
+        for(let countIndex = 0; countIndex< count; countIndex++){
+            let queryValue = [];
+            for(let valuesIndex = 0; valuesIndex < values.length; valuesIndex++){
+                console.log(countIndex)
+                if(new Set(arrayArgumentIndex).has(valuesIndex)){
+                    queryValue.push(values[valuesIndex][countIndex])
+                }
+                else{
+                    queryValue.push(values[valuesIndex])
+                }
+            }
+            querys.push(mysql.format(template,queryValue))
+        }
+        console.log(querys);
     }
     else{
         // ? 대체 문자가 있다면 대체문자르 값으로 변환해준다.

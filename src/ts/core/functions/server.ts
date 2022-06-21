@@ -1,6 +1,7 @@
 import mysql from 'mysql2/promise'
 import { Database } from '../Database'
 import {runCmd} from './io'
+// https://stackoverflow.com/questions/42790602/how-do-i-check-whether-an-array-contains-a-string-in-typescript -> not conatian 함수
 
 /**
  * 데이터베이스에 기재된 모든 `guildID`를 가지고 옵니다.
@@ -20,6 +21,16 @@ import {runCmd} from './io'
  * @returns `{word,channel}`의 형식으로 반환합니다.
  */
  export const getGuildData = async (pool:mysql.Pool,serverid:string) => {
+    const word = await getWordDB(pool,serverid)
+    const channel = await getChannelDB(pool,serverid)
+    const result = {
+        word: word,
+        channel: channel
+    }
+    return result
+}
+
+export const getWordDB = async (pool:mysql.Pool,serverid:string) => {
     const word = await runCmd(pool,"SELECT w.value \
     FROM serverlist s \
     INNER JOIN filterword fw \
@@ -28,27 +39,26 @@ import {runCmd} from './io'
     ON w.word_id = fw.word_id \
     WHERE `serverid` = ? \
     ",[serverid])
-    const channel = await runCmd(pool,"SELECT fc.channel_id \
+    return word
+}
+
+export const getChannelDB = async (pool:mysql.Pool,serverid:string) => {
+    const channel = await runCmd(pool,"SELECT CAST(fc.channel_id as CHAR) \
     FROM serverlist s \
     INNER JOIN filterchannel fc \
     ON fc.serverlist_index = s.index \
     WHERE serverid = ? \
     ",[serverid])
-    const result = {
-        word: word,
-        channel: channel
-    }
-    return result
+    return channel
 }
-
 /* guild 관련 함수*/
 
-export const addGuildDB = () => {
-
+export const addGuildDB = async (pool:mysql.Pool,serverid:string) => {
+    await runCmd(pool,"insert ignore into serverlist(serverid) values ?",[serverid])
 }
 
-export const removeGuildDB = () => {
-
+export const removeGuildDB = async (pool:mysql.Pool,serverid:string) => {
+    await runCmd(pool,"")
 }
 
 

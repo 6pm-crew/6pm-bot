@@ -80,10 +80,18 @@ const response = async (interaction:Interaction,database:Database) => {
 			console.log(activeArg)
 			if(activeArg === 'add'){
 				console.log(interaction.guild?.id)
-				database.addWordDB(interaction.guild?.id!,word)
+				if(database.addWord(interaction.guild?.id!,word)){
+					await interaction.reply(`${word}라는 단어는 이미 존재합니다.`)
+					return
+				}
 				// TODO 블랙리스트 추가해야 됨
 			}
 			else if(activeArg === 'remove'){
+				if(!database.removeWord(interaction.guild?.id!,word)){
+					await interaction.reply(`${word}라는 단어는 존재하지 않습니다.`)
+					return;
+				}
+				
 				// TODO 블랙리스트 삭제 함수 추가해야됨
 			}
 			await interaction.reply('word!');
