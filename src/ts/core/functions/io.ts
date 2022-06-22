@@ -37,7 +37,6 @@ export const runCmd = async (pool:mysql.Pool,cmd:any,values?:any[]) => {
         for(let countIndex = 0; countIndex< count; countIndex++){
             let queryValue = [];
             for(let valuesIndex = 0; valuesIndex < values.length; valuesIndex++){
-                console.log(countIndex)
                 if(new Set(arrayArgumentIndex).has(valuesIndex)){
                     queryValue.push(values[valuesIndex][countIndex])
                 }
@@ -45,9 +44,11 @@ export const runCmd = async (pool:mysql.Pool,cmd:any,values?:any[]) => {
                     queryValue.push(values[valuesIndex])
                 }
             }
-            querys.push(mysql.format(template,queryValue))
+            querys.push(mysql.format(template + ";",queryValue))
         }
-        console.log(querys);
+
+        // querys.join()
+        const [row,error] = await connection.query(querys.join());
     }
     else{
         // ? 대체 문자가 있다면 대체문자르 값으로 변환해준다.

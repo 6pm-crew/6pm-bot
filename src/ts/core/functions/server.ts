@@ -30,6 +30,13 @@ import {runCmd} from './io'
     return result
 }
 
+/**
+ * 특정 서버에서 사용하고 있는 단어를 가지고 옵니다.
+ * 
+ * @param pool 데이터베이스 pool 클라스
+ * @param serverid 데이터를 얻고자 하는 `guildID`
+ * @returns `string[]` 형식의 단어 배열을 반환합니다.
+ */
 export const getWordDB = async (pool:mysql.Pool,serverid:string) => {
     const word = await runCmd(pool,"SELECT w.value \
     FROM serverlist s \
@@ -42,6 +49,13 @@ export const getWordDB = async (pool:mysql.Pool,serverid:string) => {
     return word
 }
 
+/**
+ * 특정 서버에서 필터링하고 있는 `textchannel` 가지고 옵니다.
+ * 
+ * @param pool 데이터베이스 pool 클라스
+ * @param serverid 데이터를 얻고자 하는 `guildID`
+ * @returns `string[]` 형식의 `guildID` 배열을 반환합니다.
+ */
 export const getChannelDB = async (pool:mysql.Pool,serverid:string) => {
     const channel = await runCmd(pool,"SELECT CAST(fc.channel_id as CHAR) \
     FROM serverlist s \
@@ -72,6 +86,7 @@ export const removeGuildDB = async (pool:mysql.Pool,serverid:string) => {
  * @param word 데이터베이스에 넣고자 하는 단어이다.
  */
 export const addWordDB = async (pool:mysql.Pool,serverid:string,word:string |string[]) => {
+    console.log([serverid,word])
     await runCmd(pool,`INSERT IGNORE INTO words(value) VALUES (?)`,[word])
     await runCmd(pool,`insert ignore into filterword(serverlist_index,word_id) \
     SELECT s.index, w.word_id \

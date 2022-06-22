@@ -77,10 +77,9 @@ const response = async (interaction:Interaction,database:Database) => {
 		else if(interaction.options.getSubcommand() === 'word'){
 			const activeArg:string = interaction.options.getString('active')!
 			const word:string = interaction.options.getString('word')!
-			console.log(activeArg)
 			if(activeArg === 'add'){
 				console.log(interaction.guild?.id)
-				if(database.addWord(interaction.guild?.id!,word)){
+				if(!database.addWord(interaction.guild?.id!,word)){
 					await interaction.reply(`${word}라는 단어는 이미 존재합니다.`)
 					return
 				}

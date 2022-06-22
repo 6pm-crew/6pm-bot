@@ -40,7 +40,6 @@ export const addWord = (database:Database,serverid:string,word:string) => {
     }
     array.push(word)
     database.setDataWords(serverid,array)
-    console.log(database.getDataWords())
     return true
 }
 

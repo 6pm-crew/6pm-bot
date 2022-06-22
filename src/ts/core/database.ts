@@ -7,16 +7,27 @@ import {addWordDB,
     getGuildData,
     getServers,
     removeWordDB} from './functions/server'
+import { remove } from 'typedoc/dist/lib/utils'
 
 /**
  * 디스코드 데이터를 관리하는 클라스이다.
  */
 export class Database{
     // server: {필터링될 단어[]},
+
+    /** 현재 모든 서버가 필터링하고 있는 단어를 저장하는 `Map`입니다. */
     private dataWords:Map<string,any[]> = new Map<string,[]>()
+
+    /** 현재 모든 서버가 필터링하고 있는 `textchannel`를 저장하는 `Map`입니다. */
     private dataChanels:Map<string,any[]> = new Map<string,[]>()
+
+    /** 현재 사용하고 이는 mysql pool값을 저장하고 있는 값입니다. */
     private mysqlPool:mysql.Pool
+
+    /** 데이터베이스와 동기화시에 동기화해야할 서버를 저장하는 변수입니다. */
     private editedServer:Set<string> = new Set<string>()
+
+    /** 현재 데이터베이스에 올라가있는 모든 서버의 `guildID`를 저장하고 있는 변수입니다. */
     private serverlist:string[] = []
 
     constructor() {
@@ -60,15 +71,29 @@ export class Database{
     }
 
     /**
-     * 
+     * 데이터 베이스랑 현 실행 클라이언트랑 동기화 해줍니다.
      */
     syncronize = async () => {
         for(const serverid of this.editedServer){
             const original = await getWordDB(this.mysqlPool,serverid)
             const originalValue = new Set<string>(Object.values(original!).map(x => x.value))
             const changeValue = new Set<string>(this.dataWords.get(serverid))
-            console.log('deleting',new Set([...originalValue].filter(x => !changeValue.has(x))))
-            await addWordDB(this.mysqlPool,serverid,[...changeValue].filter(x => !originalValue.has(x)))
+            const deletingValue = [...originalValue].filter(x => !changeValue.has(x))
+            const addingValue = [...changeValue].filter(x => !originalValue.has(x))
+
+            if(deletingValue.length > 0){
+                await removeWordDB(this.mysqlPool,serverid,deletingValue)
+            }
+            else if(deletingValue.length > 1){
+                await removeWordDB(this.mysqlPool,serverid,deletingValue[0])
+            }
+
+            if(addingValue.length > 0){
+                await addWordDB(this.mysqlPool,serverid,addingValue[0])
+            }
+            else if(addingValue.length > 1){
+                await addWordDB(this.mysqlPool,serverid,addingValue)
+            }
             this.editedServer.delete(serverid)
         }
 
@@ -146,8 +171,11 @@ export class Database{
      * @param word `database` 클라스에 넣고자 하는 단어이다.
      */
     addWord = (guildID:string,word:string) => {
-        this.editedServer.add(guildID);
-        return addWord(this,guildID,word)
+        const result = addWord(this,guildID,word)
+        if(result){
+            this.editedServer.add(guildID)
+        }
+        return result
     }
 
     /**
@@ -157,8 +185,12 @@ export class Database{
      * @param word `database` 클라스에 삭제하고자 하는 단어이다.
      */
     removeWord = (guildID:string,word:string) => {
-        this.editedServer.add(guildID)
-        return removeWord(this,guildID,word)
+        const result = removeWord(this,guildID,word);
+        if(result){
+            this.editedServer.add(guildID)
+        }
+
+        return result
     } 
 
 

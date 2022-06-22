@@ -15,6 +15,11 @@ export class Thread{
         this.start()
     }
 
+    /**
+     * 현 스레드에 데이터베이스 값을 저장해줍니다.
+     * 
+     * @param database 현 정보를 저장하고 있는 데이터베이스 클라스
+     */
     setDatabase = (database:Database) => {
         this.database = database;
     }

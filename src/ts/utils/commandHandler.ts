@@ -63,7 +63,6 @@ export const slashCommandHandler = (bot:Client<boolean>,database:Database,reload
  */
 export const run = (commands:JSON[]) =>{
     const rest = new REST({ version: '9' }).setToken(DISCORD_BOT_TOKEN!);
-    console.log(DatabaseConfig);
     (async () => {
         try {
             console.log('Started refreshing application (/) commands.');

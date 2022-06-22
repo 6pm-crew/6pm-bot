@@ -19,11 +19,11 @@ let thread:Thread = new Thread();
 thread.setDatabase(database)
 
 
-runCmd(database.getMysqlPool(),`insert ignore into filterword(serverlist_index,word_id) \
-    SELECT s.index, w.word_id \
-    FROM serverlist s, words w \
-    WHERE s.serverid = ? and w.value = ?`,
-    ["test",["a","b","c","d"]])
+// runCmd(database.getMysqlPool(),`insert ignore into filterword(serverlist_index,word_id) \
+//     SELECT s.index, w.word_id \
+//     FROM serverlist s, words w \
+//     WHERE s.serverid = ? and w.value = ?`,
+//     ["test",["a","b","c","d"]])
 require("./utils/CommandHandler")(client,database,true)
 
 // Login to Discord with your client's token
