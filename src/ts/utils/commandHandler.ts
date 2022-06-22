@@ -25,6 +25,7 @@ import { Routes } from 'discord-api-types/v9';
     return fs.readdirSync(path).filter(f => f.endsWith(ending))
 }
 
+
 /**
  * 모든 `slashCommands`을 `commands` 파일에서부터 불러서 저장합니다.
  */

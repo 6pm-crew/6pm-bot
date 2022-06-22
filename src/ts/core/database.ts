@@ -105,14 +105,12 @@ export class Database{
             // 서버 채널 동기화하기 위함
             {
                 const original = await getChannelDB(this.mysqlPool,serverid)
-                console.log(original)
                 const originalValue = new Set<string>(Object.values(original!).map(x => x['CAST(fc.channel_id as CHAR)']))
                 const changeValue = new Set<string>(this.dataChanels.get(serverid))
 
                 const deletingValue = [...originalValue].filter(x => !changeValue.has(x))
                 const addingValue = [...changeValue].filter(x => !originalValue.has(x))
 
-                console.log(deletingValue)
                 if(deletingValue.length > 0){
                     await removeChannelDB(this.mysqlPool,serverid,deletingValue[0])
                 }

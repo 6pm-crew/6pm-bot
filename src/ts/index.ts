@@ -4,7 +4,7 @@ import {DISCORD_BOT_TOKEN} from "./config"
 import {Database} from "./core/Database"
 import { runCmd } from "./core/functions/io";
 import {Thread} from "./thread/Thread"
-
+import { exitHandler } from "./utils/exitHandler";
 
 // Create a new client instance
 const client:Client = new Client({ intents: [Intents.FLAGS.GUILDS] });
@@ -28,3 +28,16 @@ require("./utils/CommandHandler")(client,database,true)
 
 // Login to Discord with your client's token
 client.login(DISCORD_BOT_TOKEN);
+
+//do something when app is closing
+process.on('exit', exitHandler.bind(null,database,{cleanup:true}));
+
+//catches ctrl+c event
+process.on('SIGINT', exitHandler.bind(null,database, {exit:true}));
+
+// catches "kill pid" (for example: nodemon restart)
+process.on('SIGUSR1', exitHandler.bind(null,database, {exit:true}));
+process.on('SIGUSR2', exitHandler.bind(null,database, {exit:true}));
+
+//catches uncaught exceptions
+process.on('uncaughtException', exitHandler.bind(null,database, {exit:true}));

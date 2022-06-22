@@ -98,8 +98,8 @@ export const addWordDB = async (pool:mysql.Pool,serverid:string,word:string |str
 /**
  * 데이터베이스에 단어를 제거해주는 모듈 함수
  * @param pool 데이터베이스 pool 클라스
- * @param serverid 단어를 집언허고자 하는 `guildID`
- * @param word 데이터베이스에 넣고자 하는 단어이다.
+ * @param serverid 단어를 빼고자 하는 `guildID`
+ * @param word 데이터베이스에 빼고자 하는 단어입니다.
  */
 export const removeWordDB = async (pool:mysql.Pool,serverid:string,word:string | string[]) => {
     await runCmd(pool,
@@ -122,6 +122,13 @@ export const removeWordDB = async (pool:mysql.Pool,serverid:string,word:string |
 
 /* 채널 관련 함수 */
 
+/**
+ * 데이터베이스에 채팅방을 제거해주는 모듈 함수
+ * 
+ * @param pool 데이터베이스 pool 클라스
+ * @param serverid 채팅방을 빼고자 하는 `guildID`
+ * @param channelID 데이터베이스에 빼고자 하는 `textchannel`입니다.
+ */
 export const removeChannelDB = async (pool:mysql.Pool,serverid:string,channelID:string | string[]) => {
     console.log("ChannelID: ",channelID)
     await runCmd(pool,
@@ -137,6 +144,13 @@ export const removeChannelDB = async (pool:mysql.Pool,serverid:string,channelID:
         [serverid,channelID])
 }
 
+/**
+ * 데이터베이스에 채팅방을 추가해주는 모듈 함수
+ * 
+ * @param pool 데이터베이스 pool 클라스
+ * @param serverid 채팅방을 넣고자 하는 `guildID`
+ * @param channelID 데이터베이스에 넣고자 하는 `textchannel`입니다.
+ */
 export const addChanelDB = async (pool:mysql.Pool,serverid:string,channelID:string | string[]) => {
     await runCmd(pool,
         "insert             ignore into filterchannel(serverlist_index,channel_id) \
