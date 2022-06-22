@@ -103,23 +103,53 @@ export const addWordDB = async (pool:mysql.Pool,serverid:string,word:string |str
  */
 export const removeWordDB = async (pool:mysql.Pool,serverid:string,word:string | string[]) => {
     await runCmd(pool,
-                    "DELETE FROM    filterword \
-                    WHERE           word_id\
-                    IN              (\
-                        select          `word_id`\
-                        FROM            words\
-                        WHERE           `value` = ?\
+                    "DELETE FROM        filterword\
+                    WHERE               serverlist_index\
+                    IN                  (\
+                        select              `index`\
+                        FROM                serverlist\
+                        WHERE               `serverid` = ?\
+                        )\
+                    AND                 `word_id`\
+                    IN                  (\
+                        SELECT              `word_id`\
+                        FROM                words\
+                        WHERE               `value` = ?\
                         )",
-                        [word])
+                    [serverid,word])
 }
 
 
 /* 채널 관련 함수 */
 
-export const removeChannelDB = () => {
-
+export const removeChannelDB = async (pool:mysql.Pool,serverid:string,channelID:string | string[]) => {
+    console.log("ChannelID: ",channelID)
+    await runCmd(pool,
+        "DELETE FROM        filterchannel\
+        WHERE               serverlist_index\
+        IN                  (\
+            select              `index`\
+            FROM                serverlist\
+            WHERE               `serverid` = ?\
+            )\
+        AND                 `channel_id` = ?\
+            ",
+        [serverid,channelID])
 }
 
-export const addChanelDB = () => {
-
+export const addChanelDB = async (pool:mysql.Pool,serverid:string,channelID:string | string[]) => {
+    await runCmd(pool,
+        "insert             ignore into filterchannel(serverlist_index,channel_id) \
+        Values              (\
+            ( \
+                SELECT              `index` \
+                FROM                serverlist \
+                WHERE               serverid = ?\
+            ),\
+            ?\
+        )",
+        [serverid,channelID]
+    )
 }
+
+

@@ -44,10 +44,10 @@ export const addWord = (database:Database,serverid:string,word:string) => {
 }
 
 /**
- * `Database` 클라스에서 특정 guildID에 특정 단어를 지우기 위한 함수입니다.
+ * `Database` 클라스에서 특정 guildID에 특정 단어를 추가하기 위한 함수입니다.
  * 
  * @param database 데이터베이스 기본 클라스
- * @param serverid 단어 삭제 명령어가 실행되는 `guildID`
+ * @param serverid 단어 추가 명령어가 실행되는 `guildID`
  * @param word 삭제할 단어
  */
 export const removeWord = (database:Database,serverid:string,word:string) => {
@@ -63,10 +63,38 @@ export const removeWord = (database:Database,serverid:string,word:string) => {
 
 /* 채널 관련 함수 */
 
-export const removeChannel = () => {
-
+/**
+ * `Database` 클라스에서 특정 guildID에 특정 단어를 추가하기 위한 함수입니다.
+ * 
+ * @param database 데이터베이스 기본 클라스
+ * @param serverid 단어 추가 명령어가 실행되는 `guildID`
+ * @param word 추가할 단어
+ */
+export const addChannel = (database:Database,serverid:string,channelID:string) => {
+    const array = database.getDataChannels().get(serverid)!
+    if(new Set(array).has(channelID)){
+        return false
+    }
+    array.push(channelID)
+    database.setDataChannels(serverid,array)
+    return true
 }
 
-export const addChannel = () => {
-
+/**
+ * `Database` 클라스에서 특정 guildID에 특정 채널를 지우기 위한 함수입니다.
+ * 
+ * @param database 데이터베이스 기본 클라스
+ * @param serverid 채널 추가 명령어가 실행되는 `guildID`
+ * @param channelID 추가할 채널
+ * @returns 
+ */
+ export const removeChannel = (database:Database,serverid:string,channelID:string) => {
+    const array = database.getDataChannels().get(serverid)!
+    const temp = new Set(array)
+    if(!temp.has(channelID)){
+        return false
+    }
+    const result = array.filter(element => element != channelID)
+    database.setDataChannels(serverid,result)
+    return true
 }

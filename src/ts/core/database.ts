@@ -1,12 +1,15 @@
 import mysql from 'mysql2/promise'
 import {DatabaseConfig} from '../config'
 import {runCmd} from './functions/io'
-import {addWord,removeWord} from './functions/data'
+import {addWord,removeWord,addChannel,removeChannel} from './functions/data'
 import {addWordDB,
     getWordDB, 
     getGuildData,
     getServers,
-    removeWordDB} from './functions/server'
+    removeWordDB,
+    getChannelDB,
+    removeChannelDB,
+    addChanelDB} from './functions/server'
 import { remove } from 'typedoc/dist/lib/utils'
 
 /**
@@ -74,27 +77,59 @@ export class Database{
      * 데이터 베이스랑 현 실행 클라이언트랑 동기화 해줍니다.
      */
     syncronize = async () => {
+        console.log("syncronizing")
         for(const serverid of this.editedServer){
-            const original = await getWordDB(this.mysqlPool,serverid)
-            const originalValue = new Set<string>(Object.values(original!).map(x => x.value))
-            const changeValue = new Set<string>(this.dataWords.get(serverid))
-            const deletingValue = [...originalValue].filter(x => !changeValue.has(x))
-            const addingValue = [...changeValue].filter(x => !originalValue.has(x))
 
-            if(deletingValue.length > 0){
-                await removeWordDB(this.mysqlPool,serverid,deletingValue)
+            // 서버 단어 동기화하기 위함
+            {           
+                const original = await getWordDB(this.mysqlPool,serverid)
+                const originalValue = new Set<string>(Object.values(original!).map(x => x.value))
+                const changeValue = new Set<string>(this.dataWords.get(serverid))
+                const deletingValue = [...originalValue].filter(x => !changeValue.has(x))
+                const addingValue = [...changeValue].filter(x => !originalValue.has(x))
+
+                if(deletingValue.length > 0){
+                    await removeWordDB(this.mysqlPool,serverid,deletingValue[0])
+                }
+                else if(deletingValue.length > 1){
+                    await removeWordDB(this.mysqlPool,serverid,deletingValue)
+                }
+
+                if(addingValue.length > 0){
+                    await addWordDB(this.mysqlPool,serverid,addingValue[0])
+                }
+                else if(addingValue.length > 1){
+                    await addWordDB(this.mysqlPool,serverid,addingValue)
+                }
             }
-            else if(deletingValue.length > 1){
-                await removeWordDB(this.mysqlPool,serverid,deletingValue[0])
+            // 서버 채널 동기화하기 위함
+            {
+                const original = await getChannelDB(this.mysqlPool,serverid)
+                console.log(original)
+                const originalValue = new Set<string>(Object.values(original!).map(x => x['CAST(fc.channel_id as CHAR)']))
+                const changeValue = new Set<string>(this.dataChanels.get(serverid))
+
+                const deletingValue = [...originalValue].filter(x => !changeValue.has(x))
+                const addingValue = [...changeValue].filter(x => !originalValue.has(x))
+
+                console.log(deletingValue)
+                if(deletingValue.length > 0){
+                    await removeChannelDB(this.mysqlPool,serverid,deletingValue[0])
+                }
+                else if(deletingValue.length > 1){
+                    await removeChannelDB(this.mysqlPool,serverid,deletingValue)
+                }
+
+                if(addingValue.length > 0){
+                    await addChanelDB(this.mysqlPool,serverid,addingValue[0])
+                }
+                else if(addingValue.length > 1){
+                    await addChanelDB(this.mysqlPool,serverid,addingValue)
+                }
             }
 
-            if(addingValue.length > 0){
-                await addWordDB(this.mysqlPool,serverid,addingValue[0])
-            }
-            else if(addingValue.length > 1){
-                await addWordDB(this.mysqlPool,serverid,addingValue)
-            }
             this.editedServer.delete(serverid)
+
         }
 
     }
@@ -125,6 +160,10 @@ export class Database{
      */
     setDataWords = (guildID:string,word:string[]) => {
         this.dataWords.set(guildID,word)
+    }
+
+    setDataChannels = (guildID:string,channelIDs:string[]) => {
+        this.dataChanels.set(guildID,channelIDs)
     }
 
     /**
@@ -164,6 +203,9 @@ export class Database{
         return this.serverlist
     }
 
+
+    /** 채널 단어 관련 함수 */
+
     /**
      * `database` 클라스에 단어를 추가한다.
      * 
@@ -193,5 +235,22 @@ export class Database{
         return result
     } 
 
+    /** 채널 관련 함수 */
+
+    addChannel = (guildID:string,channelID:string) => {
+        const result = addChannel(this,guildID,channelID)
+        if(result){
+            this.editedServer.add(guildID)
+        }
+        return result
+    }
+
+    removeChannel = (guildID:string,channelID:string) => {
+        const result = removeChannel(this,guildID,channelID)
+        if(result){
+            this.editedServer.add(guildID)
+        }
+        return result
+    }
 
 }

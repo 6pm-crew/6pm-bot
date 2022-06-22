@@ -66,34 +66,47 @@ const response = async (interaction:Interaction,database:Database) => {
     if (interaction.commandName === 'blacklist') {
 		if(interaction.options.getSubcommand() === 'room'){
 			const activeArg:string = interaction.options.getString('active')!
+			const channel = interaction.options.getChannel("channel");
+			console.log(channel?.id);
 			if(activeArg === 'add'){
+				if(!database.addChannel(interaction.guild?.id!,channel?.id!)){
+					await interaction.reply(`${channel}라는 채널는 이미 존재합니다.`)
+					return
+				}
+				await interaction.reply(`${channel}가 성공적으로 추가되었습니다.`);
+				return
 				// TODO 블랙리스트 추가해야 됨
 			}
 			else if(activeArg === 'remove'){
 				// TODO 블랙리스트 삭제 함수 추가해야됨
+				if(!database.removeChannel(interaction.guild?.id!,channel?.id!)){
+					await interaction.reply(`${channel}라는 채널는 존재하지 않습니다.`)
+					return
+				}
+				await interaction.reply(`${channel}가 성공적으로 삭제되었습니다.`);
+				return
 			}
-			await interaction.reply('room!');
+			
 		}
 		else if(interaction.options.getSubcommand() === 'word'){
 			const activeArg:string = interaction.options.getString('active')!
 			const word:string = interaction.options.getString('word')!
 			if(activeArg === 'add'){
-				console.log(interaction.guild?.id)
 				if(!database.addWord(interaction.guild?.id!,word)){
 					await interaction.reply(`${word}라는 단어는 이미 존재합니다.`)
 					return
 				}
-				// TODO 블랙리스트 추가해야 됨
+				await interaction.reply(`${word}가 성공적으로 추가되었습니다.`);
+				return
 			}
 			else if(activeArg === 'remove'){
 				if(!database.removeWord(interaction.guild?.id!,word)){
 					await interaction.reply(`${word}라는 단어는 존재하지 않습니다.`)
 					return;
 				}
-				
-				// TODO 블랙리스트 삭제 함수 추가해야됨
+				await interaction.reply(`${word}가 성공적으로 삭제되었습니다.`);
+				return
 			}
-			await interaction.reply('word!');
 		}
 		else{
 			await interaction.reply('command not found!')
