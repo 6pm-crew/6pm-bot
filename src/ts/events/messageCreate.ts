@@ -11,20 +11,30 @@ export const messageCreateModule = {
         if(message.author.bot) return
         let sendingMessage:string = message.content;
         let deleteMessage:Boolean = false;
+        for(const element of database.getDataChannels().get(message.guild?.id!)!){
+            if(message.author.bot){
+                return
+            }
+            if(element === message.guild?.id){
+                message.delete()
+                return
+            }
+        }
         database.getDataWords().get(message.guild?.id!)?.forEach(element => {
             if(message.content.includes(element)){
                 deleteMessage = true
-                let filterStar = "꘎".repeat(element.length)
+                let filterStar = "∗".repeat(element.length)
                 sendingMessage = sendingMessage.replace(element,filterStar)
             }
 
         })
         if(deleteMessage){
             message.delete()
+            let APM = message.createdAt.getHours() >= 12 ? '오후' : '오전' 
+            let hour = message.createdAt.getHours() > 12 ? message.createdAt.getHours() - 12 : message.createdAt.getHours()
+            message.channel.send( `${message.author} [ ${APM} ${hour}:${message.createdAt.getMinutes()} ] `+ sendingMessage)
         }
-        let APM = message.createdAt.getHours() >= 12 ? '오후' : '오전' 
-        let hour = message.createdAt.getHours() > 12 ? message.createdAt.getHours() - 12 : message.createdAt.getHours()
-        message.channel.send( `${message.author} [ ${APM} ${hour}:${message.createdAt.getMinutes()} ] `+ sendingMessage)
+
 
 
 	},
