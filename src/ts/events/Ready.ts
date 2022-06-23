@@ -1,5 +1,5 @@
 import {Client} from "discord.js"
-import { Database } from "../core/Database";
+import { Database } from "../core/database";
 
 
 export const onReadyModule = {

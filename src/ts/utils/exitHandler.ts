@@ -1,4 +1,4 @@
-import { Database } from "../core/Database";
+import { Database } from "../core/database";
 
 /**
  * `options`의 인터페이스입니다.

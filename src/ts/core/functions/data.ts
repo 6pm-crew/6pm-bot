@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise'
-import { Database } from '../Database'
+import { Database } from '../database'
 import {runCmd} from './io'
 
 /**

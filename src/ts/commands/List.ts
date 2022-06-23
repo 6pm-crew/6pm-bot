@@ -1,7 +1,7 @@
 
 import { SlashCommandBuilder,SlashCommandSubcommandsOnlyBuilder } from '@discordjs/builders';
 import { Channel, Interaction } from 'discord.js';
-import { Database } from '../core/Database';
+import { Database } from '../core/database';
 import { MessageEmbed } from 'discord.js';
 
 

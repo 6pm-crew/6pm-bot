@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise'
-import { Database } from '../Database'
+import { Database } from '../database'
 import {runCmd} from './io'
 // https://stackoverflow.com/questions/42790602/how-do-i-check-whether-an-array-contains-a-string-in-typescript -> not conatian 함수
 

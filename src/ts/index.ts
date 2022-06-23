@@ -2,9 +2,9 @@
 import {Client, Intents} from "discord.js"
 import { toEditorSettings } from "typescript";
 import {DISCORD_BOT_TOKEN} from "./config"
-import {Database} from "./core/Database"
+import {Database} from "./core/database"
 import { runCmd } from "./core/functions/io";
-import {Thread} from "./thread/Thread"
+import {Thread} from "./thread/thread"
 import { exitHandler } from "./utils/exitHandler";
 
 // Create a new client instance
@@ -15,8 +15,8 @@ let database:Database = new Database();
 let thread:Thread = new Thread();
 thread.setDatabase(database)
 
-require("./utils/CommandHandler")(client,database,true)
-require("./utils/EventHandler")(client,database,true)
+require("./utils/commandHandler")(client,database,true)
+require("./utils/eventHandler")(client,database,true)
 
 // client.on('message', message => {
 // 	console.log(message.content)

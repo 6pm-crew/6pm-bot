@@ -1,4 +1,4 @@
-import { Database } from "../core/Database";
+import { Database } from "../core/database";
 import { runCmd } from "../core/functions/io";
 
 /**
