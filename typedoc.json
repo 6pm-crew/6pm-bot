@@ -7,5 +7,5 @@
     "entryPointStrategy": "expand",
     "includes": "./src/",
     "categorizeByGroup": false,
-    "readme":"./src/README.md"
+    "readme":"./README.md"
 }

@@ -35,9 +35,9 @@ export class Thread{
     private static MIN = this.SEC * 60
     /** 현재 사용중인 `interval` 주소를 기록합니다. */
     private thread?:NodeJS.Timer = undefined;
-    /** 동기화 시킬 데이터베이스르 저장합니다. */
+    /** 동기화 시킬 데이터베이스를 저장합니다. */
     private database?:Database = undefined;
-    
+
     /** 생성자입니다. */
     constructor(){
         this.start()
