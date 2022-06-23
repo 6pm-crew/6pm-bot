@@ -86,16 +86,18 @@ export const slashCommandHandler = (bot:Client<boolean>,database:Database,reload
  */
 export const run = (commands:JSON[]) =>{
     const rest = new REST({ version: '9' }).setToken(DISCORD_BOT_TOKEN!);
+    // 현재 json에 기록된 파일을 디스코드 서버에 올려서 봇이 사용할 수 있게 GUI를 형성하는 과정입니다.
     (async () => {
         try {
             console.log('Started refreshing application (/) commands.');
     
             console.log(BOT_ID!)
+            // 모든 `guild`에 넣기 때문에 시간이 약간 걸릴 수도 있습니다.
             await rest.put(
                 Routes.applicationCommands(BOT_ID!),
                 { body: commands },
             );
-    
+                
             console.log('Successfully reloaded application (/) commands.');
         } catch (error) {
             console.error(error);

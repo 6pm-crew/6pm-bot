@@ -31,18 +31,18 @@ import { Permissions } from 'discord.js';
 
 
 /**
- * `slashcommand`를 만들기 위한 `builder`이다.
+ * `slashcommand`를 만들기 위한 `builder`입니다.
  */
 const data = new SlashCommandBuilder()
 	.setName('list')
 	.setDescription('Get info about a user or a server!')
-	//서버 커맨드 `word` 를 만드는 부분이다.
+	//서버 커맨드 `word` 를 만드는 부분입니다.
 	.addSubcommand(subcommand =>
 		subcommand
 			.setName('word')
 			.setDescription('필터링된 단어를 보여줍니다.')
 	)
-	//서브 커맨드 `room` 를 만드는 부분이다.
+	//서브 커맨드 `room` 를 만드는 부분입니다.
 	.addSubcommand(subcommand =>
 		subcommand
 			.setName('room')
@@ -86,7 +86,7 @@ const response = async (interaction:Interaction,database:Database) => {
             // 검색한 채널를 순차하면서 단어 배열을 '\n'을 추가한 문자열을 만들어준다.
             let channelString:string = '';
 
-            // 검색 결과의 길이가 0이라면 등록된 채널이 없으므로 없다는 것으로 반환한다.
+            // 검색 결과의 길이가 0이라면 등록된 채널이 없으므로 없다는 것으로 반환합니다.
             if(temp?.length === 0 ){
                 //없을 경우에 생기는 필터링입니다.
                 Embed.addFields(
@@ -120,7 +120,7 @@ const response = async (interaction:Interaction,database:Database) => {
             // 검색한 채널를 순차하면서 단어 배열을 '\n'을 추가한 문자열을 만들어준다.
             let wordString:string = '';
 
-            // 검색 결과의 길이가 0이라면 등록된 단어가 없으므로 없다는 것으로 반환한다.
+            // 검색 결과의 길이가 0이라면 등록된 단어가 없으므로 없다는 것으로 반환합니다.
             if(temp?.length === 0 ){
                 //없을 경우에 생기는 필터링입니다.
                 Embed.addFields(

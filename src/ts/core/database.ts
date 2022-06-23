@@ -35,7 +35,7 @@ import {addWordDB,
 import { remove } from 'typedoc/dist/lib/utils'
 
 /**
- * 디스코드 데이터를 관리하는 클라스이다.
+ * 디스코드 데이터를 관리하는 클라스입니다.
  */
 export class Database{
     // server: {필터링될 단어[]},
@@ -69,7 +69,7 @@ export class Database{
     }
 
     /**
-     * `Database` 클라스가 생성될 기본 설정을 해주는 함수이다.
+     * `Database` 클라스가 생성될 기본 설정을 해주는 함수입니다.
      */
     private setupDatabase = async () => {
         console.log("setuping database...")
@@ -86,7 +86,7 @@ export class Database{
         for(const guildID of this.serverlist){
             // 데이터베이스로 부터 데이터를 가지고 옵니다.
             const res = await getGuildData(this.mysqlPool,guildID)
-            // 결과값으로 단어랑 채널 필터링를 분리한다.
+            // 결과값으로 단어랑 채널 필터링를 분리합니다.
             const word = Object.values(res.word!).map(element => element.value);
             const channel = Object.values(res.channel!).map(element => element['CAST(fc.channel_id as CHAR)'])
             this.dataWords.set(guildID,word)
@@ -156,9 +156,9 @@ export class Database{
 
 
     /**
-     * 데이터베이스에 사용하는 `Pool`를 출력한다.
+     * 데이터베이스에 사용하는 `Pool`를 출력합니다.
      * 
-     * @returns `mysql.Pool` 형식으로 반환한다.
+     * @returns `mysql.Pool` 형식으로 반환합니다.
      */
     getMysqlPool = () => {
         return this.mysqlPool
@@ -166,7 +166,7 @@ export class Database{
     /**
      * `Map<string, any[]>`형식으로, guildID와 그에 상승하는 필터된 단어 배열을 가져온다.
      * 
-     * @returns `Map<string,[]>` 형식의 반환한다.
+     * @returns `Map<string,[]>` 형식의 반환합니다.
      */
     getDataWords = () => {
         return this.dataWords
@@ -189,7 +189,7 @@ export class Database{
     /**
      * 모든 서버에서의 필터링된 단어를 가지고 온다.
      * 
-     * @returns `Map<string,[]>` 형식으로 반환한다.
+     * @returns `Map<string,[]>` 형식으로 반환합니다.
      */
     getDataChannels = () => {
         return this.dataChanels
@@ -197,15 +197,15 @@ export class Database{
 
     /**
      * `guildID`를 반환해준다.
-     * @returns `Map<string,[]>` 형식으로 반환한다.
+     * @returns `Map<string,[]>` 형식으로 반환합니다.
      */
     getServer = () => {
         return getServers(this.mysqlPool)
     }
 
     /**
-     * `guildID`를 `string[]` 형식으로 저장한다.
-     * `private` 함수이다.
+     * `guildID`를 `string[]` 형식으로 저장합니다.
+     * `private` 함수입니다.
      */
     private setServerlist = async () => {
 
@@ -215,9 +215,9 @@ export class Database{
     }
 
     /**
-     * `guildID`를 반환한다.
+     * `guildID`를 반환합니다.
      * 
-     * @returns `string[]` 형식으로 반환한다. 
+     * @returns `string[]` 형식으로 반환합니다. 
      */
     getServerlist = () => {
         return this.serverlist
@@ -227,10 +227,10 @@ export class Database{
     /** 채널 단어 관련 함수 */
 
     /**
-     * `database` 클라스에 단어를 추가한다.
+     * `database` 클라스에 단어를 추가합니다.
      * 
      * @param guildID 단어를 집어넣고자 하는 `guildID`
-     * @param word `database` 클라스에 넣고자 하는 단어이다.
+     * @param word `database` 클라스에 넣고자 하는 단어입니다.
      */
     addWord = (guildID:string,word:string) => {
         const result = addWord(this,guildID,word)
@@ -241,10 +241,10 @@ export class Database{
     }
 
     /**
-     * `database` 클라스에 단어를 삭제한다.
+     * `database` 클라스에 단어를 삭제합니다.
      * 
      * @param guildID 단어를 삭제하고자 하는 `guildID`
-     * @param word `database` 클라스에 삭제하고자 하는 단어이다.
+     * @param word `database` 클라스에 삭제하고자 하는 단어입니다.
      */
     removeWord = (guildID:string,word:string) => {
         const result = removeWord(this,guildID,word);

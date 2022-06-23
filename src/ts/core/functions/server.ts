@@ -105,7 +105,7 @@ export const removeGuildDB = async (pool:mysql.Pool,serverid:string) => {
  * 데이터베이스에 단어를 추가해준 모듈 함수
  * @param pool 데이터베이스 pool 클라스
  * @param serverid 단어를 집어넣고자 하는 `guildID`
- * @param word 데이터베이스에 넣고자 하는 단어이다.
+ * @param word 데이터베이스에 넣고자 하는 단어입니다.
  */
 export const addWordDB = async (pool:mysql.Pool,serverid:string,word:string |string[]) => {
     console.log([serverid,word])

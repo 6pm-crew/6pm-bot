@@ -26,12 +26,12 @@ import { GuildMember, Interaction } from 'discord.js';
 import { Database } from '../core/database';
 import { Permissions } from 'discord.js';
 /**
- * `slashcommand`를 만들기 위한 `builder`이다.
+ * `slashcommand`를 만들기 위한 `builder`입니다.
  */
 const data = new SlashCommandBuilder()
 	.setName('blacklist')
 	.setDescription('Get info about a user or a server!')
-	//서버 커맨드 `word` 를 만드는 부분이다.
+	//서버 커맨드 `word` 를 만드는 부분입니다.
 	.addSubcommand(subcommand =>
 		subcommand
 			.setName('word')
@@ -53,7 +53,7 @@ const data = new SlashCommandBuilder()
 							.setRequired(true)
 					)
 	)
-	//서브 커맨드 `room` 를 만드는 부분이다.
+	//서브 커맨드 `room` 를 만드는 부분입니다.
 	.addSubcommand(subcommand =>
 		subcommand
 			.setName('room')

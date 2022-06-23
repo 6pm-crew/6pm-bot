@@ -26,13 +26,13 @@ import Connection from 'mysql2/typings/mysql/lib/Connection';
 /**
  * 데이터베이스에서 실행할 `query`를 들어오는 인수값에 따라 실행 방식을 바꿔준다.
  * 
- * @param pool mysql Pool를 넣는 매개변수이다.
- * @param cmd mysql에 실행할 실행 명령어이다.
- * @param values 실행 명령어에 들어갈 변수이다.
- * @returns mysql이 실행되고 반환되는 결과값이다.
+ * @param pool mysql Pool를 넣는 매개변수입니다.
+ * @param cmd mysql에 실행할 실행 명령어입니다.
+ * @param values 실행 명령어에 들어갈 변수입니다.
+ * @returns mysql이 실행되고 반환되는 결과값입니다.
  */
 export const runCmd = async (pool:mysql.Pool,cmd:any,values?:any[]) => {
-    // pool으로부터 연결을 시도한다.
+    // pool으로부터 연결을 시도합니다.
     const connection:mysql.PoolConnection = await pool.getConnection()
     let arrayArgumentIndex:number[] = [];
     // value가 undefined 인것을 확인합니다. 즉, 실행 쿼리에 '?' 대체 문자가 없다는 의미입니다.

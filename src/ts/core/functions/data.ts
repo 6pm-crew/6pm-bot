@@ -25,7 +25,7 @@ import { Database } from '../database'
 import {runCmd} from './io'
 
 /**
- * 저장되어있는 `guildID`를 `serverid`를 통해서 제거한다.
+ * 저장되어있는 `guildID`를 `serverid`를 통해서 제거합니다.
  * 
  * @param database 데이터베이스 기본 클라스
  * @param serverid 삭제될 `guildID` 
@@ -36,7 +36,7 @@ export const removeGuild = (database:Database,serverid:string) => {
 }
 
 /**
- * `serverid`를 통해서 `database` 추가한다.
+ * `serverid`를 통해서 `database` 추가합니다.
  * 
  * @param database 데이터베이스 기본 클라스
  * @param serverid 추가될 `guildID` 

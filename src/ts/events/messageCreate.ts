@@ -28,11 +28,24 @@ import { Database } from '../core/database';
  * 이벤트를 실행하기 위한 json 변수
  */
 export const messageCreateModule = {
+	/** 이벤트 이름입니다. */
 	name: 'messageCreate',
+    /**
+     * 메세지 값을 받을 때 사용하는 이벤트 핸들러입니다.
+     * 
+     * @param database 데이터베이스를 저장하고 있는 클라스입니다.
+     * @param message 채팅시에 들어오는 매개변수 값이며, 채팅친 정보에 대한 데이터가 들어옵니다.
+     * @returns `undefined | null`로 반환값은 없습니다.
+     */
 	execute(database:Database,message:Message) {
+        // 디스코드 봇도 이벤트 핸드러에 들어가기 때문에 봇이라면 반환하여 실행하지 않도록 합니다.
         if(message.author.bot) return
+        // 사용자가 친 메세지 값을 받아옵니다.
         let sendingMessage:string = message.content;
+        // 사용자가 친 메시지의 삭제 여부를 결정할 변수입니다.
         let deleteMessage:Boolean = false;
+        
+        // 단어를 확인하기 전에 채팅을 치면 안되는 채팅방인지 확인하고 맞다면 메세지를 삭제하고 반환합니다.
         for(const element of database.getDataChannels().get(message.guild?.id!)!){
             if(message.author.bot){
                 return
@@ -42,6 +55,8 @@ export const messageCreateModule = {
                 return
             }
         }
+
+        // 데이터베이스에 들어가있는 단어를 확인하여 현재 채팅에 있다면 *모양으로 대체합니다.
         database.getDataWords().get(message.guild?.id!)?.forEach(element => {
             if(message.content.includes(element)){
                 deleteMessage = true
@@ -50,6 +65,8 @@ export const messageCreateModule = {
             }
 
         })
+
+        // 필터링을 해야하는 채팅이 맞다면 채팅을 삭제하고 다시 필터링한 채팅으로 보내서 마무리 합니다.
         if(deleteMessage){
             message.delete()
             let APM = message.createdAt.getHours() >= 12 ? '오후' : '오전' 

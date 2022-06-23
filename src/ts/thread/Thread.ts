@@ -29,10 +29,16 @@ import { runCmd } from "../core/functions/io";
  * 
  */
 export class Thread{
+    /** 1초 정의한 값입니다. */
     private static SEC = 1000
+    /** 1분을 정의한 값입니다. */
     private static MIN = this.SEC * 60
+    /** 현재 사용중인 `interval` 주소를 기록합니다. */
     private thread?:NodeJS.Timer = undefined;
+    /** 동기화 시킬 데이터베이스르 저장합니다. */
     private database?:Database = undefined;
+    
+    /** 생성자입니다. */
     constructor(){
         this.start()
     }
@@ -46,27 +52,42 @@ export class Thread{
         this.database = database;
     }
     
+    /**
+     * 스레드를 정지하는 함수입니다.
+     */
     stop = () => {
 
     }
 
+    /**
+     * 스레드를 중시하는 함수입니다.
+     */
     pause = () => {
 
     }
 
+    /**
+     * 스레드를 재시작하는 함수입니다.
+     */
     restart = () => {
 
     }
 
+    /**
+     * 스레드를 시작하는 함수입니다.
+     */
     start = () => {
         if(this.thread === undefined){
             this.thread = setInterval(this.runFucntion,Thread.SEC * 10)
         }
     }
 
+    /**
+     * 특정 시간이 흐른뒤에 실행되는 함수입니다. 
+     */
     runFucntion = async() => {
         const connectionCount = await runCmd(this.database!.getMysqlPool(),"SHOW STATUS LIKE 'Threads_connected'",undefined)
-        //사용중인 명령어가 있다면 추가 행동을 하지 않고 바로 종료한다.
+        //사용중인 명령어가 있다면 추가 행동을 하지 않고 바로 종료합니다.
         if(Object.values(connectionCount!)[0].Value > 1){
             return
         }

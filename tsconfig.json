@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
       "target": "es2020",             // ECMA버전을 설정할 수 있다
-      "module": "commonjs",           // 모듈을 설정한다 모듈에는 commonjs와 requirejs가 있다
+      "module": "commonjs",           // 모듈을 설정합니다. 모듈에는 commonjs와 requirejs가 있다
       "strict": true,                 // 엄격모드; 즉, 타입을 꼼꼼하게 체크해준다
       "esModuleInterop": true,        // import * as ~~~ 을 함수로 사용할 수 있게 해준다
       "skipLibCheck": true,           // *.d.ts파일의 타의 검사를 건너뛴
