@@ -5,6 +5,7 @@
     "name": "6pmbot",
     "tsconfig": "./tsconfig.json",
     "entryPointStrategy": "expand",
-    "includes": "./src/ts/utils/"
-    
+    "includes": "./src/",
+    "categorizeByGroup": false,
+    "readme":"./src/README.md"
 }

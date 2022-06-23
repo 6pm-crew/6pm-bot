@@ -45,8 +45,8 @@ export class Thread{
     runFucntion = async() => {
         const connectionCount = await runCmd(this.database!.getMysqlPool(),"SHOW STATUS LIKE 'Threads_connected'",undefined)
         //사용중인 명령어가 있다면 추가 행동을 하지 않고 바로 종료한다.
-        if(Object.values(connectionCount!)[0].Value >= 1){
-            // return
+        if(Object.values(connectionCount!)[0].Value > 1){
+            return
         }
 
         this.database!.syncronize()
