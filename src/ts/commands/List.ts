@@ -1,8 +1,9 @@
 
 import { SlashCommandBuilder,SlashCommandSubcommandsOnlyBuilder } from '@discordjs/builders';
-import { Channel, Interaction } from 'discord.js';
+import { Channel, GuildMember, Interaction } from 'discord.js';
 import { Database } from '../core/database';
 import { MessageEmbed } from 'discord.js';
+import { Permissions } from 'discord.js';
 
 
 
@@ -45,6 +46,12 @@ const response = async (interaction:Interaction,database:Database) => {
 	.setFooter({ text: 'Some footer text here', iconURL: 'https://avatars.githubusercontent.com/u/103432358?s=200&v=4' });
 
     if (interaction.commandName === 'list') {
+        const testing = interaction.member! as GuildMember
+        if(!testing.permissions.has(Permissions.FLAGS.MANAGE_ROLES)){
+            await interaction.reply('권한이 없습니다.')
+            return
+            
+        }
 		if(interaction.options.getSubcommand() === 'room'){
 			const activeArg:string = interaction.options.getString('active')!
             const result = await database.getDataChannels()

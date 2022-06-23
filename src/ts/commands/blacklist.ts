@@ -1,7 +1,8 @@
 
 import { SlashCommandBuilder,SlashCommandSubcommandsOnlyBuilder } from '@discordjs/builders';
-import { Interaction } from 'discord.js';
+import { GuildMember, Interaction } from 'discord.js';
 import { Database } from '../core/database';
+import { Permissions } from 'discord.js';
 /**
  * `slashcommand`를 만들기 위한 `builder`이다.
  */
@@ -62,7 +63,11 @@ const data = new SlashCommandBuilder()
  */
 const response = async (interaction:Interaction,database:Database) => {
     if (!interaction.isCommand()) return;
-
+	const testing = interaction.member! as GuildMember
+	if(!testing.permissions.has(Permissions.FLAGS.MANAGE_ROLES)){
+		await interaction.reply('권한이 없습니다.')
+		return
+	}
     if (interaction.commandName === 'blacklist') {
 		if(interaction.options.getSubcommand() === 'room'){
 			const activeArg:string = interaction.options.getString('active')!

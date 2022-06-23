@@ -10,7 +10,7 @@ import { REST } from '@discordjs/rest';
 import { Database } from '../core/database';
 
 // const { Client, Intents } = require('discord.js');
-import {DISCORD_BOT_TOKEN,DatabaseConfig} from "../config"
+import {DISCORD_BOT_TOKEN,DatabaseConfig,BOT_ID} from "../config"
 
 import { Routes } from 'discord-api-types/v9';
 
@@ -68,8 +68,9 @@ export const run = (commands:JSON[]) =>{
         try {
             console.log('Started refreshing application (/) commands.');
     
+            console.log(BOT_ID!)
             await rest.put(
-                Routes.applicationCommands('897061776624091148'),
+                Routes.applicationCommands(BOT_ID!),
                 { body: commands },
             );
     

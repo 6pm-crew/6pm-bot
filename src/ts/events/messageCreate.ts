@@ -32,7 +32,8 @@ export const messageCreateModule = {
             message.delete()
             let APM = message.createdAt.getHours() >= 12 ? '오후' : '오전' 
             let hour = message.createdAt.getHours() > 12 ? message.createdAt.getHours() - 12 : message.createdAt.getHours()
-            message.channel.send( `${message.author} [ ${APM} ${hour}:${message.createdAt.getMinutes()} ] `+ sendingMessage)
+            var zerofilled = ('00'+message.createdAt.getMinutes()).slice(-2);
+            message.channel.send( `${message.author} [ ${APM} ${hour}:${zerofilled} ] `+ sendingMessage)
         }
 
 
