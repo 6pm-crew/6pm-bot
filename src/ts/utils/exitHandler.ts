@@ -21,26 +21,51 @@
 //SOFTWARE.
 
 import { Database } from "../core/database";
-
+import shell from "shelljs"
 /**
  * `options`의 인터페이스입니다.
  */
-export interface options{
+ export interface options{
     exit?: boolean,
     cleanup?:boolean
 }
+export default class ExitHandler{
 
-/**
- * 프로그램이 종료되면 실행되는 이벤트 핸들러입니다.
- * 
- * @param options 종료 옵션입니다.
- * @param exitCode 종료 코드입니다.
- */
-export function exitHandler(database:Database,options:options, exitCode:number | undefined) {
-    if (options.cleanup) console.log('clean');
-    if (exitCode || exitCode === 0) console.log(exitCode);
-    if (options.exit) process.exit();
+    public static STOP = 0
+    public static RELOAD = 1
+    public static UPDATE = 2
 
-    database.syncronize()
+    private exitMode:number = 0;
+    constructor(exitMode?:number){
+        if(exitMode != undefined){
+            this.exitMode = exitMode
+        }
+    }
 
+
+    exit(exitMode:number){
+        this.exitMode = exitMode
+        if(exitMode == ExitHandler.RELOAD || exitMode == ExitHandler.UPDATE){
+            console.log("reload | update")
+        }
+        process.exit(exitMode)
+    }
+    /**
+     * 프로그램이 종료되면 실행되는 이벤트 핸들러입니다.
+     * 
+     * @param options 종료 옵션입니다.
+     * @param exitCode 종료 코드입니다.
+     */
+    exitHandler(database:Database,options:options, exitCode:number | undefined) {
+        if (options.cleanup) console.log('clean');
+        console.log(exitCode)
+        if (exitCode || exitCode === 0) console.log(exitCode);
+        if (options.exit) process.exit();
+
+
+        database.syncronize()
+        if(exitCode === 1 || exitCode === 2){
+            shell.exec("npm run start")
+        }
+    }
 }

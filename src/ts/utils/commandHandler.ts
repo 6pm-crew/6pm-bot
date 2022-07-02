@@ -35,6 +35,7 @@ import { Database } from '../core/database';
 import {DISCORD_BOT_TOKEN,DatabaseConfig,BOT_ID} from "../config"
 
 import { Routes } from 'discord-api-types/v9';
+import ExitHandler from './exitHandler';
 
 /**
  * 특정 디렉토리에서 파일을 가지고 옵니다.
@@ -60,7 +61,7 @@ export const commands:JSON[] = [];
  * @param database 데이터베이스를 저장하고 있는 클라스입니다.
  * @param reload 재시작 여부를 넣는 변수입니다.
  */
-export const slashCommandHandler = (bot:Client<boolean>,database:Database,reload:boolean) => {
+export const slashCommandHandler = (bot:Client<boolean>,database:Database,exitHandler:ExitHandler,reload:boolean) => {
 
     let slashComamnds = getFiles("./build/commands",".js")
     // `commands` 폴더에 커맨드가 없는 예외처리
@@ -71,7 +72,7 @@ export const slashCommandHandler = (bot:Client<boolean>,database:Database,reload
     // `commands` 폴더에서 실제 커맨드를 불러옵니다.
     for (const path of slashComamnds){
         const command = require(`../commands/${path}`)
-        bot.on('interactionCreate',interaction => command.response(interaction,database));
+        bot.on('interactionCreate',interaction => command.response(interaction,database,exitHandler));
         commands.push(command.data.toJSON())
     }
     // 불러온 커맨드를 등록해줍니다.
