@@ -1,0 +1,1 @@
+nohup ./reload.sh 1>/dev/null  2>&1 &

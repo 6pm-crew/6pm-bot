@@ -45,6 +45,9 @@ export default class ExitHandler{
 
     exit(exitMode:number){
         this.exitMode = exitMode
+        if(exitMode == 0 ){
+            shell.exec("pkill reload.sh")
+        }
         if(exitMode == ExitHandler.RELOAD || exitMode == ExitHandler.UPDATE){
             console.log("reload | update")
         }
@@ -62,10 +65,10 @@ export default class ExitHandler{
         if (exitCode || exitCode === 0) console.log(exitCode);
         if (options.exit) process.exit();
 
-
+        
         database.syncronize()
         if(exitCode === 1 || exitCode === 2){
-            shell.exec("node ./build/index.js")
+            process.exit(0)
             //nohup node build/index.js 1>/dev/null 2>&1 &
         }
     }
