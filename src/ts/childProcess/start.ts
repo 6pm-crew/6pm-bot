@@ -27,9 +27,9 @@ process.on("message",(message:string,url:string) => {
             
             initGit.stdout?.on('data',data => {
                 shell.echo("sudo git init")
-                shell.echo("git config --global --add safe.directory ./discordbot")
                 shell.exec(`sudo git remote add origin ${GithubConfig.remote}`,{async:true})
                 shell.exec(`sudo git branch -M main`,(code, stdout,stderr) => {
+                    shell.echo("sudo chmod 755 ./*")
                     if(process.send !== undefined){
                         process.send("reboot")
                     }

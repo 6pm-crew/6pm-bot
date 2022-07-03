@@ -56,7 +56,7 @@ export default class ExitHandler{
      * @param options 종료 옵션입니다.
      * @param exitCode 종료 코드입니다.
      */
-    exitHandler(database:Database,options:options, exitCode:number | undefined) {
+    async exitHandler(database:Database,options:options, exitCode:number | undefined) {
         if (options.cleanup) console.log('clean');
         console.log(exitCode)
         if (exitCode || exitCode === 0) console.log(exitCode);
