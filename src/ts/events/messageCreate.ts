@@ -38,6 +38,7 @@ export const messageCreateModule = {
      * @returns `undefined | null`로 반환값은 없습니다.
      */
 	execute(database:Database,message:Message) {
+        console.log("running")
         // 디스코드 봇도 이벤트 핸드러에 들어가기 때문에 봇이라면 반환하여 실행하지 않도록 합니다.
         if(message.author.bot) return
         // 사용자가 친 메세지 값을 받아옵니다.
