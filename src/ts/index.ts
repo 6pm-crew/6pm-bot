@@ -42,6 +42,7 @@ require("./utils/commandHandler")(client,database,exitHandler,true)
 require("./utils/eventHandler")(client,database,exitHandler,true)
 
 
+console.log("testing")
 // Login to Discord with your client's token
 client.login(DISCORD_BOT_TOKEN);
 
