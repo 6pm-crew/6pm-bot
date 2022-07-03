@@ -18,15 +18,18 @@ process.on("message",(message:string,url:string) => {
         // shell.exit(1);
       }
 
-    shell.exec("git pull origin main",{async:true},(code, stdout,stderr) => {
+    shell.exec("sudo git pull origin main --force",{async:true},(code, stdout,stderr) => {
+        shell.exec(`${GithubConfig.passwd}`)
         console.log(stdout)
 
         if(code === 128){
-            const initGit = shell.exec("git init",{async:true})
+            const initGit = shell.exec("sudo git init",{async:true})
+            
             initGit.stdout?.on('data',data => {
-                shell.echo("git init")
-                shell.exec(`git remote add origin ${GithubConfig.remote}`,{async:true})
-                shell.exec(`git branch -M main`,(code, stdout,stderr) => {
+                shell.echo("sudo git init")
+                shell.echo("git config --global --add safe.directory ./discordbot")
+                shell.exec(`sudo git remote add origin ${GithubConfig.remote}`,{async:true})
+                shell.exec(`sudo git branch -M main`,(code, stdout,stderr) => {
                     if(process.send !== undefined){
                         process.send("reboot")
                     }
