@@ -65,7 +65,7 @@ export default class ExitHandler{
 
         database.syncronize()
         if(exitCode === 1 || exitCode === 2){
-            shell.exec("npm run start")
+            shell.exec("node ./build/index.js")
         }
     }
 }

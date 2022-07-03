@@ -34,7 +34,10 @@ const {
     MYSQL_PASSWD,
     MYSQL_PORT,
     MYSQL_DB,
-    MYSQL_USER} = process.env;
+    MYSQL_USER,
+    GITHUB_REMOTE,
+    GITHUB_BRANCH
+} = process.env;
 
 // Changing Scope:string to Scope_Int:number
 
@@ -54,8 +57,15 @@ const DatabaseConfig = {
     database:MYSQL_DB
     
 }
+
+const GithubConfig = {
+    remote:GITHUB_REMOTE as string,
+    branch:GITHUB_BRANCH as string
+}
 export {
     BOT_ID,
     DISCORD_BOT_TOKEN,
-    DatabaseConfig};
+    DatabaseConfig,
+    GithubConfig
+};
 // export default DISCORD_BOT_TOKEN;

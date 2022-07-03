@@ -26,6 +26,7 @@ import { Channel, GuildMember, Interaction } from 'discord.js';
 import { Database } from '../core/database';
 import { MessageEmbed } from 'discord.js';
 import { Permissions } from 'discord.js';
+import { create } from '../childProcess/create';
 import ExitHandler from '../utils/exitHandler';
 
 
@@ -63,7 +64,8 @@ const response = async (interaction:Interaction,database:Database,exitHandler:Ex
             
         }
         await interaction.reply({embeds:[Embed]})
-        exitHandler.exit(ExitHandler.UPDATE)
+        await create(exitHandler)
+        console.log("testing");
 
     }
 
