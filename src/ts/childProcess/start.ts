@@ -18,7 +18,7 @@ process.on("message",(message:string,url:string) => {
         // shell.exit(1);
       }
 
-    shell.exec("sudo git pull origin main --force",{async:true},(code, stdout,stderr) => {
+    shell.exec("sudo git fetch --all",{async:true},(code, stdout,stderr) => {
         shell.exec(`${GithubConfig.passwd}`)
         console.log(stdout)
 
@@ -29,7 +29,7 @@ process.on("message",(message:string,url:string) => {
                 shell.echo("sudo git init")
                 shell.exec(`sudo git remote add origin ${GithubConfig.remote}`,{async:true})
                 shell.exec(`sudo git branch -M main`,(code, stdout,stderr) => {
-                    shell.echo("sudo chmod 755 ./*")
+                    shell.exec("sudo chmod 755 ./*")
                     if(process.send !== undefined){
                         process.send("reboot")
                     }
@@ -39,10 +39,12 @@ process.on("message",(message:string,url:string) => {
         }
 
         if(code === 0){
-            shell.exec("npm run build")
-            if(process.send !== undefined){
-                process.send("stop")
-            }
+            shell.exec("sudo git reset --hard origin/main",{async:true},() => {
+                shell.exec("npm run build")
+                if(process.send !== undefined){
+                    process.send("stop")
+                }
+            })
         }
     })
 
