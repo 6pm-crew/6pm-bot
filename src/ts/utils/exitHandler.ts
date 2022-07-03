@@ -66,6 +66,7 @@ export default class ExitHandler{
         database.syncronize()
         if(exitCode === 1 || exitCode === 2){
             shell.exec("node ./build/index.js")
+            //nohup node build/index.js 1>/dev/null 2>&1 &
         }
     }
 }

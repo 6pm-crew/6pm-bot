@@ -1,7 +1,11 @@
 import {fork} from 'node:child_process'
 import ExitHandler from '../utils/exitHandler';
 
-
+/**
+ * 자식 프로세스를 만드는 함수입니다.
+ * 
+ * @param exitHandler 종료할 때 사용하는 exithandler입니다.
+ */
 export async function create(exitHandler:ExitHandler){
     if (process.argv[2] === 'child') {
         setTimeout(() => {

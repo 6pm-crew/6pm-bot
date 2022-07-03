@@ -2,6 +2,7 @@ import shell from 'shelljs'
 import {GithubConfig} from '../config'
 
 /**
+ * 자식 프로세스의 실행부입니다.
  * 깃허브 서버에서 데이터를 받아와서 빌드해줍니다.
  */
 process.on("message",(message:string,url:string) => {

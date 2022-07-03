@@ -78,7 +78,7 @@ export class Thread{
      */
     start = () => {
         if(this.thread === undefined){
-            this.thread = setInterval(this.runFucntion,Thread.SEC * 10)
+            this.thread = setInterval(this.runFucntion,Thread.MIN * 5)
         }
     }
 
